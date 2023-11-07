@@ -29,8 +29,15 @@ class RecepteurDeDiffusionDeTexto : BroadcastReceiver() {
                     Log.d("Récepteur de Texto", "mdr Texto reçu de $sender  : $messageBody")
 
                     // Emplacement où on enregistre le fichier (exemple)
-                    val filePath = File(context?.filesDir, "sms_log.txt")
-                    // Contenu à écrire dans le fichier
+                    val timestamp = System.currentTimeMillis()
+                    val filePath = File(context?.filesDir, "${sender}_${timestamp}_log.txt")
+                    if (!filePath.exists()) {
+                        try {
+                            filePath.createNewFile()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }                    // Contenu à écrire dans le fichier
                     val logText = "SMS reçu de $sender : $messageBody\n"
                     Log.d("Récepteur de Texto", context?.filesDir.toString())
                     Log.d("Récepteur de Texto", filePath.readText())
