@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.models
+package fr.hurtiglastbil.modeles
 
 import android.content.Context
 import fr.hurtiglastbil.enumerations.JsonEnum

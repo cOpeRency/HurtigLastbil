@@ -1,6 +1,6 @@
 package fr.hurtiglastbil.interfaces
 
-import fr.hurtiglastbil.models.Personne
+import fr.hurtiglastbil.modeles.Personne
 import org.json.JSONArray
 
 interface IListeBlanche {

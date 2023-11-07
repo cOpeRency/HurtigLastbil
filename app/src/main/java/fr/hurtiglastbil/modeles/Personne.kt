@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.models
+package fr.hurtiglastbil.modeles
 
 import fr.hurtiglastbil.enumerations.JsonEnum
 import org.json.JSONObject

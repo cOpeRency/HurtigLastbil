@@ -1,8 +1,8 @@
-package fr.hurtiglastbil.model
+package fr.hurtiglastbil.modeles
 
-import fr.hurtiglastbil.model.texto.TextoRendezVousLivraison
-import fr.hurtiglastbil.model.texto.Texto
-import fr.hurtiglastbil.model.texto.TextoIndefini
+import fr.hurtiglastbil.modeles.texto.TextoRendezVousLivraison
+import fr.hurtiglastbil.modeles.texto.Texto
+import fr.hurtiglastbil.modeles.texto.TextoIndefini
 import java.text.Normalizer
 import java.util.Date
 

@@ -3,9 +3,9 @@ package fr.hurtiglastbil
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import fr.hurtiglastbil.models.Configuration
-import fr.hurtiglastbil.models.ListeBlanche
-import fr.hurtiglastbil.models.Personne
+import fr.hurtiglastbil.modeles.Configuration
+import fr.hurtiglastbil.modeles.ListeBlanche
+import fr.hurtiglastbil.modeles.Personne
 import org.json.JSONArray
 
 class ExempleConfigListeBlanche : AppCompatActivity() {

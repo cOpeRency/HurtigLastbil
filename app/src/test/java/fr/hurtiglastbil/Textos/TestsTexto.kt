@@ -1,7 +1,7 @@
 package fr.hurtiglastbil.Textos
 
-import fr.hurtiglastbil.model.FabriqueATexto
-import fr.hurtiglastbil.model.texto.TextoRendezVousLivraison
+import fr.hurtiglastbil.modeles.FabriqueATexto
+import fr.hurtiglastbil.modeles.texto.TextoRendezVousLivraison
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before

@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.util
+package fr.hurtiglastbil.utilitaires
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

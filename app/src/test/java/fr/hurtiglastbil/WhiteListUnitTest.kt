@@ -1,7 +1,7 @@
 package fr.hurtiglastbil
 
-import fr.hurtiglastbil.models.Personne
-import fr.hurtiglastbil.models.ListeBlanche
+import fr.hurtiglastbil.modeles.Personne
+import fr.hurtiglastbil.modeles.ListeBlanche
 import org.assertj.core.api.Assertions.*
 import org.json.JSONArray
 import org.junit.*

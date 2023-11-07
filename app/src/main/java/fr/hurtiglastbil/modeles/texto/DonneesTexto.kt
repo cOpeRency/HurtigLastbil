@@ -1,6 +1,6 @@
-package fr.hurtiglastbil.model.texto
+package fr.hurtiglastbil.modeles.texto
 
-import fr.hurtiglastbil.util.SerialiseurDeDate
+import fr.hurtiglastbil.utilitaires.SerialiseurDeDate
 import kotlinx.serialization.Serializable
 import java.util.Date
 

@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.model.texto
+package fr.hurtiglastbil.modeles.texto
 
 import java.util.Date
 
