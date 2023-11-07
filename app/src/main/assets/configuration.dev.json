@@ -1,0 +1,15 @@
+{
+  "liste blanche" : [
+    {
+      "nom" : "John Doe",
+      "role" : "CEO",
+      "numero" : "0123456789"
+    },
+    {
+      "nom" : "John D",
+      "role" : "CEO",
+      "numero" : "0123456789"
+    }
+  ],
+  "temps de rafraichissement" : 10
+}

@@ -8,3 +8,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+app/src/main/assets/configSchema.json
+app/src/main/assets/configuration.dev.json

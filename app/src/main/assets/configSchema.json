@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "liste blanche": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "nom": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            },
+            "numero": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "nom",
+            "role",
+            "numero"
+          ]
+        }
+      ]
+    },
+    "temps de rafraichissement": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "liste blanche",
+    "temps de rafraichissement"
+  ]
+}
