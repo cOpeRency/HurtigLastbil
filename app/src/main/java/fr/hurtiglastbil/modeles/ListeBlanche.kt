@@ -31,12 +31,17 @@ class ListeBlanche : IListeBlanche {
     }
 
     override fun estDansLaListeBlanche(personne: Personne): Boolean {
-        return listeBlanche.contains(personne)
+        for (personneDansLaListe in listeBlanche) {
+            if (personneDansLaListe.equals(personne)) {
+                return true
+            }
+        }
+        return false
     }
 
     override fun creerPersonneSiInserer(personne: Personne): Personne {
         if (estDansLaListeBlanche(personne)) {
-            return listeBlanche.find { it == personne }!!
+            return listeBlanche.find { it.equals(personne) }!!
         } else {
             return personne
         }

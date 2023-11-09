@@ -46,6 +46,9 @@ class ExempleConfigListeBlanche : AppCompatActivity() {
         val config = Configuration(this).configurationDepuisFichierInterne(cheminDuFichierDeConfiguration)
         config.insererPersonne(Personne("Michel", "Camionneur", "01234567899"), cheminDuFichierDeConfiguration)
         Log.d(TAG, "Liste blanche avec michel: ${config.listeBlanche!!.listeBlanche}")
+
+        Log.d(TAG, "Y'a bien michel: ${config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = "01234567899"))}")
+        Log.d(TAG, "Michel par son num: ${config.listeBlanche!!.creerPersonneSiInserer(Personne(numeroDeTelephone = "01234567899"))}")
     }
 
 }

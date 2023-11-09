@@ -23,4 +23,11 @@ data class Personne(
     fun versJSON(): JSONObject {
         return JSONObject().put(JsonEnum.NOM_PERSONNE.cle, nom).put(JsonEnum.ROLE_PERSONNE.cle, role).put(JsonEnum.NUMERO_DE_TELEPHONE_PERSONNE.cle, numeroDeTelephone)
     }
+
+    override fun hashCode(): Int {
+        var result = nom?.hashCode() ?: 0
+        result = 31 * result + (role?.hashCode() ?: 0)
+        result = 31 * result + numeroDeTelephone.hashCode()
+        return result
+    }
 }

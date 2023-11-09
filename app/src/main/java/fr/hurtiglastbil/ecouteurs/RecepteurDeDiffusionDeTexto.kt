@@ -21,6 +21,7 @@ class RecepteurDeDiffusionDeTexto : BroadcastReceiver() {
                     val message = Telephony.Sms.Intents.getMessagesFromIntent(intent)
                     val sender = message.get(0).displayOriginatingAddress
                     val messageBody = message.get(0).displayMessageBody
+                    val timestamp = System.currentTimeMillis()
                     Toast.makeText(
                         context,
                         "SMS reçu de $sender  : $messageBody",
@@ -29,15 +30,15 @@ class RecepteurDeDiffusionDeTexto : BroadcastReceiver() {
                     Log.d("Récepteur de Texto", "mdr Texto reçu de $sender  : $messageBody")
 
                     // Emplacement où on enregistre le fichier (exemple)
-                    val timestamp = System.currentTimeMillis()
                     val filePath = File(context?.filesDir, "${sender}_${timestamp}_log.txt")
                     if (!filePath.exists()) {
                         try {
                             filePath.createNewFile()
                         } catch (e: IOException) {
-                            e.printStackTrace()
+                            Log.e("Exception creation", "Erreur dans la création du fichier de stockage de SMS.")
                         }
-                    }                    // Contenu à écrire dans le fichier
+                    }
+                    // Contenu à écrire dans le fichier
                     val logText = "SMS reçu de $sender : $messageBody\n"
                     Log.d("Récepteur de Texto", context?.filesDir.toString())
                     Log.d("Récepteur de Texto", filePath.readText())
