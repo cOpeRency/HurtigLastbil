@@ -14,13 +14,13 @@ class Configuration(val context: Context) : IConfiguration {
     var listeBlanche : ListeBlanche? = null
 
     /**
-     * Temps de raffraichissment entre enregistrement des textos
+     * Temps de rafraichissment entre enregistrement des textos
      */
-    var tempsDeRaffraichissment : Int? = null
+    var tempsDeRafraichissment : Int? = null
 
     override fun configurationDepuisJSONObject(json: JSONObject): Configuration {
         listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(JsonEnum.LISTE_BLANCHE.cle))
-        tempsDeRaffraichissment = json.getInt(JsonEnum.DELAIS_DE_RAFRAICHISSEMENT.cle)
+        tempsDeRafraichissment = json.getInt(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle)
 
         return this
     }
@@ -28,7 +28,7 @@ class Configuration(val context: Context) : IConfiguration {
     override fun configurationVersJSONObject(): JSONObject {
         var json = JSONObject()
         json.put(JsonEnum.LISTE_BLANCHE.cle, listeBlanche!!.listeBlancheVersJSONArray())
-        json.put(JsonEnum.DELAIS_DE_RAFRAICHISSEMENT.cle, tempsDeRaffraichissment)
+        json.put(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle, tempsDeRafraichissment)
         return json
     }
 
@@ -49,7 +49,7 @@ class Configuration(val context: Context) : IConfiguration {
     }
 
     override fun configurationDepuisFichierInterne(cheminDuFichier: String): Configuration {
-        if (leFichierExistes(cheminDuFichier)) {
+        if (leFichierExiste(cheminDuFichier)) {
             val configStream: InputStream = context.openFileInput(cheminDuFichier)
             val configString: String = configStream.reader().readText()
             return configurationDepuisJSON(configString)
@@ -69,7 +69,7 @@ class Configuration(val context: Context) : IConfiguration {
         fichier.writeText(configurationVersJSON())
     }
 
-    override fun leFichierExistes(cheminDuFichier: String): Boolean {
+    override fun leFichierExiste(cheminDuFichier: String): Boolean {
         return File(context.applicationContext.filesDir, cheminDuFichier).exists()
     }
 }

@@ -32,15 +32,15 @@ class ExempleConfigListeBlanche : AppCompatActivity() {
         Log.d(TAG, "Liste blanche: ${listeBlanche.listeBlanche}")
 
         val configuration = Configuration(this).configurationDepuisJSON(stringJsonConfiguration)
-        Log.d(TAG, "Temps de rafraichissement du config: ${configuration.tempsDeRaffraichissment}")
+        Log.d(TAG, "Temps de rafraichissement du config: ${configuration.tempsDeRafraichissment}")
         Log.d(TAG, "Liste blanche du config: ${configuration.listeBlanche!!.listeBlanche}")
 
         val configurationDepuisAssets = Configuration(this).configurationDepuisFichierInterne(cheminDuFichierDeConfiguration)
-        Log.d(TAG, "Temps de rafraichissement du config depuis assets: ${configurationDepuisAssets.tempsDeRaffraichissment}")
+        Log.d(TAG, "Temps de rafraichissement du config depuis assets: ${configurationDepuisAssets.tempsDeRafraichissment}")
         Log.d(TAG, "Liste blanche du config depuis assets: ${configurationDepuisAssets.listeBlanche!!.listeBlanche}")
 
         val configurationDepuisFichierInterne = Configuration(this).configurationDepuisFichierInterne(cheminDuFichierDeConfiguration)
-        Log.d(TAG, "Temps de rafraichissement du config depuis fichier interne: ${configurationDepuisFichierInterne.tempsDeRaffraichissment}")
+        Log.d(TAG, "Temps de rafraichissement du config depuis fichier interne: ${configurationDepuisFichierInterne.tempsDeRafraichissment}")
         Log.d(TAG, "Liste blanche du config depuis fichier interne: ${configurationDepuisFichierInterne.listeBlanche!!.listeBlanche}")
 
         val config = Configuration(this).configurationDepuisFichierInterne(cheminDuFichierDeConfiguration)
@@ -48,7 +48,7 @@ class ExempleConfigListeBlanche : AppCompatActivity() {
         Log.d(TAG, "Liste blanche avec michel: ${config.listeBlanche!!.listeBlanche}")
 
         Log.d(TAG, "Y'a bien michel: ${config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = "01234567899"))}")
-        Log.d(TAG, "Michel par son num: ${config.listeBlanche!!.creerPersonneSiInserer(Personne(numeroDeTelephone = "01234567899"))}")
+        Log.d(TAG, "Michel par son num: ${config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = "01234567899"))}")
     }
 
 }

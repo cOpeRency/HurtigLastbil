@@ -29,7 +29,7 @@ class WhiteListUnitTest {
         assertThat(whiteList).isNotNull
         assertThat(whiteList.listeBlanche).isEqualTo(listeDePersonnes)
         assertThat(whiteList.estDansLaListeBlanche(personne)).isTrue()
-        assertThat(whiteList.creerPersonneSiInserer(Personne(numeroDeTelephone =  "0123456789"))).isEqualTo(Personne("John Doe", "CEO", "0123456789"))
+        assertThat(whiteList.creerPersonneSiInseree(Personne(numeroDeTelephone =  "0123456789"))).isEqualTo(Personne("John Doe", "CEO", "0123456789"))
     }
 
     @Test

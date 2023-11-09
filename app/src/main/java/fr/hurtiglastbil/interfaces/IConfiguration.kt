@@ -53,7 +53,7 @@ interface IConfiguration {
      * @param[cheminDuFichier] Le chemin vers le fichier
      * @return true si le fichier existe, false sinon
      */
-    fun leFichierExistes(cheminDuFichier: String): Boolean
+    fun leFichierExiste(cheminDuFichier: String): Boolean
 
     /**
      * Défini le fichier de configuration depuis un fichier interne

@@ -9,7 +9,7 @@ import org.junit.Test
 import java.util.Date
 
 class TestsTexto {
-    private lateinit var fabriqueATexto: FabriqueATexto;
+    private lateinit var fabriqueATexto: FabriqueATexto
     @Before
     fun before(){
         fabriqueATexto = FabriqueATexto()

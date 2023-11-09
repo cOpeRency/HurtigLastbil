@@ -8,7 +8,7 @@ class ListeBlanche : IListeBlanche {
     /**
      * La liste blanche au format d'un array
      */
-    var listeBlanche: MutableSet<Personne> = mutableSetOf();
+    var listeBlanche: MutableSet<Personne> = mutableSetOf()
     override fun creerUneListeBlancheDepuisTableauDeJSon(listeBlanche: JSONArray) : ListeBlanche
     {
         for (i in 0 until listeBlanche.length()) {
@@ -39,7 +39,7 @@ class ListeBlanche : IListeBlanche {
         return false
     }
 
-    override fun creerPersonneSiInserer(personne: Personne): Personne {
+    override fun creerPersonneSiInseree(personne: Personne): Personne {
         if (estDansLaListeBlanche(personne)) {
             return listeBlanche.find { it.equals(personne) }!!
         } else {

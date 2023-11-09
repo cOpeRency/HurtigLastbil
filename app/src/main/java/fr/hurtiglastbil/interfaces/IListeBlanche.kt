@@ -30,7 +30,7 @@ interface IListeBlanche {
      *
      * @param[personne] La personne à définir
      */
-    fun creerPersonneSiInserer(personne: Personne): Personne?
+    fun creerPersonneSiInseree(personne: Personne): Personne?
 
     /**
      * Insère une nouvelle personne dans la liste blanche
