@@ -44,11 +44,34 @@ class ExempleConfigListeBlanche : AppCompatActivity() {
         Log.d(TAG, "Liste blanche du config depuis fichier interne: ${configurationDepuisFichierInterne.listeBlanche!!.listeBlanche}")
 
         val config = Configuration(this).configurationDepuisFichierInterne(cheminDuFichierDeConfiguration)
-        config.insererPersonne(Personne("Michel", "Camionneur", "01234567899"), cheminDuFichierDeConfiguration)
+        config.insererPersonne(Personne("Michel", "Camionneur", "0623456799"), cheminDuFichierDeConfiguration)
         Log.d(TAG, "Liste blanche avec michel: ${config.listeBlanche!!.listeBlanche}")
 
-        Log.d(TAG, "Y'a bien michel: ${config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = "01234567899"))}")
-        Log.d(TAG, "Michel par son num: ${config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = "01234567899"))}")
+        Log.d(TAG, "Y'a bien michel: ${config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = "0623456799"))}")
+        Log.d(TAG, "Michel par son num: ${config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = "0623456799"))}")
+
+        Log.d(TAG, "Essaie mauvaise insertion avec le nom vide: ")
+        config.insererPersonne(Personne("", "Camionneur", "0619752459"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le nom trop court:")
+        config.insererPersonne(Personne("j", "Camionneur", "0619752459"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le nom mal écrit:")
+        config.insererPersonne(Personne("Jean-Pierre Culot 1234", "Camionneur", "0619752459"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le role vide:")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "", "0619752459"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le num vide:")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", ""), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le num trop long:")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "06234567890"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le num trop court:")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "062345678"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le num qui est ni 06 ni 07:")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "0123456789"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Essaie mauvaise insertion avec le num qui ne commence pas par 0:")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "1223456789"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Insertion de Jean-Pierre Culot:")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "+33623456789"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Liste blanche avec Jean-Pierre Culot: ${config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = "+33623456789"))}")
+        Log.d(TAG, "Jean-Pierre Culot par son num: ${config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = "+33623456789"))}")
     }
 
 }

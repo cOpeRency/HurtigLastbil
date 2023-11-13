@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
 import android.util.Log
+import fr.hurtiglastbil.enumerations.TagsErreur
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.Personne
 import java.io.File
@@ -29,8 +30,7 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
             }
         } else {
             //log erreur
-            Log.e("ERREUR", "traiterTexto: pas d'action")
-
+            Log.e(TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.tag, TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.message)
         }
     }
 }
@@ -46,7 +46,7 @@ private fun EnregistrerLeFichier(
         try {
             fichier.createNewFile()
         } catch (e: IOException) {
-            Log.e("Exception creation", "Erreur dans la création du fichier de stockage de SMS.")
+            Log.e(TagsErreur.ERREUR_CREATION_FICHIER.tag, TagsErreur.ERREUR_CREATION_FICHIER.message + " de stockage de SMS.")
         }
     }
     // Contenu à écrire dans le fichier
@@ -62,6 +62,6 @@ private fun EnregistrerLeFichier(
         fluxDeFichierSortant.write(texteDansFichierDeLog.toByteArray())
         fluxDeFichierSortant.close()
     } catch (e: IOException) {
-        Log.e("Exception", "Echec d'écriture de fichier: $e")
+        Log.e(TagsErreur.ERREUR_MODIFICATION_FICHIER.tag, TagsErreur.ERREUR_MODIFICATION_FICHIER.message + " de stockage de SMS." )
     }
 }

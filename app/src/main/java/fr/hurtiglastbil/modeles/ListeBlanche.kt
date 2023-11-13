@@ -1,6 +1,8 @@
 package fr.hurtiglastbil.modeles
 
+import android.util.Log
 import fr.hurtiglastbil.enumerations.JsonEnum
+import fr.hurtiglastbil.enumerations.TagsErreur
 import fr.hurtiglastbil.interfaces.IListeBlanche
 import org.json.JSONArray
 
@@ -49,7 +51,13 @@ class ListeBlanche : IListeBlanche {
 
     override fun insererPersonne(personne: Personne) {
         if (!estDansLaListeBlanche(personne)) {
-            listeBlanche.add(personne)
+            if (personne.valider()) {
+                listeBlanche.add(personne)
+            } else {
+                Log.e(TagsErreur.ERREUR_VALIDATION_PERSONNE.tag, TagsErreur.ERREUR_VALIDATION_PERSONNE.message + " donc elle n'est pas insérer.")
+            }
+        } else {
+            Log.i("Personne existe", "La personne avec le numéro suivant existe déjà dans la liste blanche: ${personne.numeroDeTelephone}")
         }
     }
 
