@@ -1,8 +1,10 @@
 package fr.hurtiglastbil.modeles
 
 import android.content.Context
+import android.util.Log
 import fr.hurtiglastbil.enumerations.JsonEnum
 import fr.hurtiglastbil.interfaces.IConfiguration
+import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
 import org.json.JSONObject
 import java.io.File
 import java.io.InputStream
@@ -18,10 +20,17 @@ class Configuration(val context: Context) : IConfiguration {
      */
     var tempsDeRafraichissment : Int? = null
 
+    /**
+     * Ensemble des mots clés
+     */
+    var typesDeTextos : ListeDesTypesDeTextos? = null
+
     override fun configurationDepuisJSONObject(json: JSONObject): Configuration {
         listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(JsonEnum.LISTE_BLANCHE.cle))
         tempsDeRafraichissment = json.getInt(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle)
+        typesDeTextos = ListeDesTypesDeTextos().creerDepuisJSONArray(json.getJSONArray(JsonEnum.TYPES_DE_TEXTO.cle))
 
+        Log.d("Tests", "configurationDepuisJSONObject: $typesDeTextos")
         return this
     }
 
@@ -29,6 +38,7 @@ class Configuration(val context: Context) : IConfiguration {
         var json = JSONObject()
         json.put(JsonEnum.LISTE_BLANCHE.cle, listeBlanche!!.listeBlancheVersJSONArray())
         json.put(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle, tempsDeRafraichissment)
+        json.put(JsonEnum.TYPES_DE_TEXTO.cle, typesDeTextos!!.listeDeMotsClesVersJSONArray())
         return json
     }
 
@@ -71,5 +81,10 @@ class Configuration(val context: Context) : IConfiguration {
 
     override fun leFichierExiste(cheminDuFichier: String): Boolean {
         return File(context.applicationContext.filesDir, cheminDuFichier).exists()
+    }
+
+    fun modifierTempsDeRafraichissement(tempsDeRafraichissement: Int, cheminDuFichier: String) {
+        this.tempsDeRafraichissment = tempsDeRafraichissement
+        sauvegarder(cheminDuFichier)
     }
 }

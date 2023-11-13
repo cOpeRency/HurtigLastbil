@@ -11,5 +11,24 @@
       "numero" : "01234567890"
     }
   ],
-  "temps de rafraichissement" : 10
+  "temps de rafraichissement" : 10,
+  "types de texto" : [
+    {
+      "rdv livraison" : [
+        "livraison",
+        "sodimat",
+        "ecoval",
+        "7h",
+        "9h",
+        "retour depot"
+      ]
+    },
+    {
+      "rdv remorque vide" : [
+        "gueret",
+        "demain",
+        "remorque vide"
+      ]
+    }
+  ]
 }

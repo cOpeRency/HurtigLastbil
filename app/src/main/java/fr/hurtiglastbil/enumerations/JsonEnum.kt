@@ -6,4 +6,5 @@ enum class JsonEnum(val cle: String) {
     NOM_PERSONNE("nom"),
     ROLE_PERSONNE("role"),
     NUMERO_DE_TELEPHONE_PERSONNE("numero"),
+    TYPES_DE_TEXTO("types de texto"),
 }

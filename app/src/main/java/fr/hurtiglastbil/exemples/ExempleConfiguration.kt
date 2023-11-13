@@ -1,14 +1,20 @@
-package fr.hurtiglastbil
+package fr.hurtiglastbil.exemples
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import fr.hurtiglastbil.enumerations.TagsErreur
+import fr.hurtiglastbil.exceptions.ExceptionNouveauMotCle
+import fr.hurtiglastbil.exceptions.ExceptionNouveauTypeTexto
+import fr.hurtiglastbil.exceptions.ExceptionSuppressionMotCle
+import fr.hurtiglastbil.exceptions.ExceptionSuppressionTypeTexto
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.ListeBlanche
 import fr.hurtiglastbil.modeles.Personne
+import fr.hurtiglastbil.modeles.texto.TypeTexto
 import org.json.JSONArray
 
-class ExempleConfigListeBlanche : AppCompatActivity() {
+class ExempleConfiguration : AppCompatActivity() {
     val TAG = "Tests"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +26,8 @@ class ExempleConfigListeBlanche : AppCompatActivity() {
         val role = "CEO"
         val numero = "0123456789"
         val stringJsonListeBlanche = "[{\"nom\":\"${nom}\",\"role\":\"${role}\",\"numero\":\"${numero}\"}]"
-        val stringJsonConfiguration ="{\"liste blanche\" : ${stringJsonListeBlanche}, \"temps de rafraichissement\": 10}"
+        val stringJsonTypeDeTexto = "[{\"rdv livraison\":[\"livraison\",\"sodimat\",\"ecoval\",\"7h\",\"9h\",\"retour depot\"]}, {\"rdv remorque vide\":[\"remorque vide\",\"gueret\",\"demain\"]}]"
+        val stringJsonConfiguration ="{\"liste blanche\" : ${stringJsonListeBlanche}, \"temps de rafraichissement\": 10, \"types de texto\": ${stringJsonTypeDeTexto}}"
         val cheminDuFichierDeConfiguration = "configuration.dev.json"
 
         val personne = Personne(nom, role, numero)
@@ -69,9 +76,58 @@ class ExempleConfigListeBlanche : AppCompatActivity() {
         Log.d(TAG, "Essaie mauvaise insertion avec le num qui ne commence pas par 0:")
         config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "1223456789"), cheminDuFichierDeConfiguration)
         Log.d(TAG, "Insertion de Jean-Pierre Culot:")
-        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "+33623456789"), cheminDuFichierDeConfiguration)
-        Log.d(TAG, "Liste blanche avec Jean-Pierre Culot: ${config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = "+33623456789"))}")
-        Log.d(TAG, "Jean-Pierre Culot par son num: ${config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = "+33623456789"))}")
+        config.insererPersonne(Personne("Jean-Pierre Culot", "Camionneur", "0623456789"), cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Liste blanche avec Jean-Pierre Culot: ${config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = "0623456789"))}")
+        Log.d(TAG, "Jean-Pierre Culot par son num: ${config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = "0623456789"))}")
+
+        Log.d(TAG, "Modification du temps de raffraichissement:")
+        config.modifierTempsDeRafraichissement(20, cheminDuFichierDeConfiguration)
+        Log.d(TAG, "Temps de raffraichissement: ${config.tempsDeRafraichissment}")
+
+        Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
+        Log.d(TAG, "Ajout d'un type de texto:")
+        config.typesDeTextos!!.ajouterTypeTexto(TypeTexto("rdv test", mutableSetOf("test", "rdv")))
+        Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
+        Log.d(TAG, "Suppression d'un type de texto:")
+        config.typesDeTextos!!.supprimerTypeTexto(TypeTexto("rdv test", mutableSetOf("test", "rdv")))
+        Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
+        Log.d(TAG, "Ajout d'un mot clé à un type de texto:")
+        config.typesDeTextos!!.recupererMotCle("rdv livraison")!!.ajouterMotCle("test")
+        Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
+        Log.d(TAG, "On ne double pas l'ajout d'un mot clé à un type de texto:")
+        try {
+            config.typesDeTextos!!.recupererMotCle("rdv livraison")!!.ajouterMotCle("test")
+        } catch (e: ExceptionNouveauMotCle) {
+            Log.e(TagsErreur.ERREUR_AJOUT_MOT_CLE.tag, e.message + " pour le type suivant : rdv livraison")
+        }
+        Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
+        Log.d(TAG, "Suppression d'un mot clé à un type de texto:")
+        config.typesDeTextos!!.recupererMotCle("rdv livraison")!!.supprimerMotCle("test")
+        Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
+        Log.d(TAG, "On ne supprime pas un mot clé qui n'existe pas à un type de texto:")
+        try {
+            config.typesDeTextos!!.recupererMotCle("rdv livraison")!!.supprimerMotCle("test")
+        } catch (e: ExceptionSuppressionMotCle) {
+            Log.e(TagsErreur.ERREUR_SUPPRESSION_MOT_CLE.tag, e.message + " pour le type suivant : rdv livraison")
+        }
+        Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
+
+        Log.d(TAG, "Doit envoyer une exception car le type de texto n'est pas valide:")
+        try {
+            config.typesDeTextos!!.ajouterTypeTexto(TypeTexto("rdv test", mutableSetOf("")))
+        } catch (e: ExceptionNouveauTypeTexto) {
+            Log.e(TagsErreur.ERREUR_AJOUT_TYPE_TEXTO.tag, e.message + " pour le type suivant : rdv test")
+        }
+        Log.d(TAG, "Doit envoyer une exception car le type de texto n'est pas valide: rdv test")
+        try {
+            config.typesDeTextos!!.supprimerTypeTexto(TypeTexto("rdv test", mutableSetOf("")))
+        } catch (e: ExceptionSuppressionTypeTexto) {
+            Log.e(TagsErreur.ERREUR_AJOUT_TYPE_TEXTO.tag, e.message + " pour le type suivant : rdv test")
+        }
+        Log.d(TAG, "Doit envoyer une exception car le mot cle existe déja :")
+        config.typesDeTextos!!.ajouterMotCle("rdv livraison","livraison")
+        Log.d(TAG, "Doit envoyer une exception car le mot cle n'existe pas :")
+        config.typesDeTextos!!.supprimerMotCle("rdv livraison","test")
     }
 
 }
