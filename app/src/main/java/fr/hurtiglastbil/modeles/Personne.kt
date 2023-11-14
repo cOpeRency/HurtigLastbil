@@ -12,7 +12,6 @@ data class Personne(
     var numeroDeTelephone: String
 ) : Validateur() {
 
-    // Fonctions de validation
     override var regles: Map<Regles, ArrayList<String>> = mapOf(
         Regles.NOM_PERSONNE to arrayListOf(Personne::nom.name),
         Regles.ROLE_PERSONNE to arrayListOf(Personne::role.name),
@@ -34,7 +33,21 @@ data class Personne(
 
         other as Personne
 
-        if (numeroDeTelephone != other.numeroDeTelephone) return false
+        if (numeroDeTelephone.startsWith("0")) {
+            if (other.numeroDeTelephone.startsWith("0")) {
+                if (numeroDeTelephone != other.numeroDeTelephone) return false
+            } else {
+                // Compare les numéros sans leur début (0 ou +33)
+                if (numeroDeTelephone.substring(1) != other.numeroDeTelephone.substring(3)) return false
+            }
+        } else {
+            if (other.numeroDeTelephone.startsWith("0")) {
+                // Compare les numéros sans leur début (0 ou +33)
+                if (numeroDeTelephone.substring(3) != other.numeroDeTelephone.substring(1)) return false
+            } else {
+                if (numeroDeTelephone != other.numeroDeTelephone) return false
+            }
+        }
 
         return true
     }
