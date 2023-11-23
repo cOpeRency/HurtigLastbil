@@ -1,8 +1,8 @@
-package fr.hurtiglastbil
+package fr.hurtiglastbil.modeles
 
 import org.junit.Test
 
-class ConfigUnitTest {
+class TestConfiguration {
     @Test
     fun doit_creer_une_instance_config_depuis_string() {
         //TODO : Créer une instance de Config depuis un string

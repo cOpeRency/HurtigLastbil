@@ -1,6 +1,5 @@
-package fr.hurtiglastbil.Textos
+package fr.hurtiglastbil.modeles
 
-import fr.hurtiglastbil.modeles.FabriqueATexto
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
 import fr.hurtiglastbil.modeles.texto.TextoRendezVousLivraison
 import fr.hurtiglastbil.modeles.texto.TypeTexto
