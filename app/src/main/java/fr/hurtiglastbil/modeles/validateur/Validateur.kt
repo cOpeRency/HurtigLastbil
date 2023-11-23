@@ -1,5 +1,6 @@
 package fr.hurtiglastbil.modeles.validateur
 
+import android.util.Log
 import fr.hurtiglastbil.enumerations.Regles
 
 abstract class Validateur {
@@ -26,6 +27,7 @@ abstract class Validateur {
             for (champ in champs) {
                 val valeurChamp = getValeurChamp(champ)
                 if (!regle.valider(valeurChamp)) {
+                    Log.d("Tests", "Valeur du champ $champ: $valeurChamp ")
                     return false
                 }
             }

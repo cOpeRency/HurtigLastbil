@@ -26,6 +26,11 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
             val corpsDuMessage = message.get(0).displayMessageBody
             val horodatage = System.currentTimeMillis()
             if (config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = expediteur))) {
+                if (config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = expediteur)).role == "administrateur") {
+                    if (corpsDuMessage.split("\n")[0].lowercase().startsWith("config")) {
+                        actionsConfiguration(corpsDuMessage, config)
+                    }
+                }
                 Log.d("Récepteur de Texto", "Texto reçu de $expediteur  : $corpsDuMessage")
                 Log.d("WHITELIST", "traiterTexto: $expediteur est dans la liste blanche")
 

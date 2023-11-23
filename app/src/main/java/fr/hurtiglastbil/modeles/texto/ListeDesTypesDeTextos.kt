@@ -35,8 +35,9 @@ class ListeDesTypesDeTextos(var typeTextos: MutableSet<TypeTexto>? = null) {
         }
     }
 
-    fun supprimerTypeTexto(typeTexto: TypeTexto) {
-        if (typeTexto.valider()) {
+    fun supprimerTypeTexto(cle: String) {
+        val typeTexto = recupererMotCle(cle)
+        if (typeTexto!!.valider()) {
             this.typeTextos?.remove(typeTexto)
         } else {
             Log.e(TagsErreur.ERREUR_SUPPRESSION_TYPE_TEXTO.tag, TagsErreur.ERREUR_SUPPRESSION_TYPE_TEXTO.message + typeTexto)

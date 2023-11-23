@@ -89,7 +89,7 @@ class ExempleConfiguration : AppCompatActivity() {
         config.typesDeTextos!!.ajouterTypeTexto(TypeTexto("rdv test", mutableSetOf("test", "rdv")))
         Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
         Log.d(TAG, "Suppression d'un type de texto:")
-        config.typesDeTextos!!.supprimerTypeTexto(TypeTexto("rdv test", mutableSetOf("test", "rdv")))
+        config.typesDeTextos!!.supprimerTypeTexto("rdv test")
         Log.d(TAG, "Liste des types de texto: ${config.typesDeTextos}")
         Log.d(TAG, "Ajout d'un mot clé à un type de texto:")
         config.typesDeTextos!!.recupererMotCle("rdv livraison")!!.ajouterMotCle("test")
@@ -120,7 +120,7 @@ class ExempleConfiguration : AppCompatActivity() {
         }
         Log.d(TAG, "Doit envoyer une exception car le type de texto n'est pas valide: rdv test")
         try {
-            config.typesDeTextos!!.supprimerTypeTexto(TypeTexto("rdv test", mutableSetOf("")))
+            config.typesDeTextos!!.supprimerTypeTexto("rdv test")
         } catch (e: ExceptionSuppressionTypeTexto) {
             Log.e(TagsErreur.ERREUR_AJOUT_TYPE_TEXTO.tag, e.message + " pour le type suivant : rdv test")
         }

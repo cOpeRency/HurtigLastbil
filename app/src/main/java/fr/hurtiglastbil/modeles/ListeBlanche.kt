@@ -49,6 +49,25 @@ class ListeBlanche : IListeBlanche {
         }
     }
 
+    fun supprimerPersonne(personne: Personne) {
+        if (estDansLaListeBlanche(personne)) {
+            Log.d("Tests", "supprimerPersonne: ${personne.numeroDeTelephone}")
+            listeBlanche.remove(creerPersonneSiInseree(personne))
+        } else {
+            Log.i("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${personne.numeroDeTelephone}")
+        }
+    }
+
+    fun modifierPersonne(nouvellePersonne: Personne) {
+        if (estDansLaListeBlanche(Personne(numeroDeTelephone = nouvellePersonne.numeroDeTelephone))) {
+            val personne = listeBlanche.find { it.equals(nouvellePersonne) }!!
+            personne.nom = nouvellePersonne.nom
+            personne.role = nouvellePersonne.role
+        } else {
+            Log.i("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${nouvellePersonne.numeroDeTelephone}")
+        }
+    }
+
     override fun insererPersonne(personne: Personne) {
         if (!estDansLaListeBlanche(personne)) {
             if (personne.valider()) {

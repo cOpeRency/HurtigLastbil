@@ -29,7 +29,7 @@ enum class Regles {
     CHARACTERES_AUTORISES {
         override fun valider(chaine: String?): Boolean {
             // Valide les caractères suivants : a-z, A-Z, -, espace
-            return chaine?.matches(Regex("^[a-zA-Z\\- ]+\$"))!!
+            return chaine?.matches(Regex("^[a-zA-ZÀ-ÖØ-öø-ÿ\\- ]+\$"))!!
         }
     };
 
