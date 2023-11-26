@@ -8,7 +8,6 @@ import fr.hurtiglastbil.modeles.texto.TypeTexto
 
 fun actionsConfiguration(corpsDuMessage: String, configuration: Configuration) {
     for (ligne in corpsDuMessage.split("\n")) {
-        Log.d("Tests", "ligne: $ligne")
         if (ligne.startsWith("CONFIG")) continue
         if (ligne.startsWith("=")) continue
         val mots = ligne.split(" ")
@@ -21,8 +20,7 @@ fun actionsConfiguration(corpsDuMessage: String, configuration: Configuration) {
             supprimer(configuration, ligne)
         }
     }
-    Log.d("Tests", "traiterTexto: $configuration")
-    configuration.sauvegarder("configuration.dev.json")
+    configuration.sauvegarder("configuration.dev.json", "config")
 }
 
 fun ajouter(configuration: Configuration, ligne: String) {
@@ -34,12 +32,10 @@ fun ajouter(configuration: Configuration, ligne: String) {
         ajouterPersonneALaListeBlanche(configuration, role, donneesPersonne.split(",")[0], donneesPersonne.split(",")[1].split(" ").joinToString(""))
     } else if(mots[1].lowercase() == "type") {
         // Ajouter type : nouveau type de texto : mot1, mot2, mot3
-        Log.d("Tests", "ajouter: $ligne")
         val extraitDeLigne = ligne.split(" : ")
         ajouterTypeDeTexto(configuration, extraitDeLigne[1], extraitDeLigne[2].split(",").onEach { it.trim() })
     } else if(mots[1].lowercase() + mots[2].lowercase() == "motsclé") {
         // Ajouter mots clé : nouveau type de texto : mot1, mot2, mot3
-        Log.d("Tests", "ajouter: $ligne")
         val extraitDeLigne = ligne.split(" : ")
         ajouterMotsCle(configuration, extraitDeLigne[1], extraitDeLigne[2].split(",").onEach { it.trim() })
     }
@@ -53,11 +49,10 @@ fun ajouterMotsCle(configuration: Configuration, typeTexto: String, motCles: Lis
 }
 
 fun ajouterPersonneALaListeBlanche(configuration: Configuration, role: String, nom: String, numeroDeTelephone: String) {
-    configuration.insererPersonne(Personne(role = role.trim(), nom = nom.trim(), numeroDeTelephone = numeroDeTelephone.trim()), "configuration.dev.json")
+    configuration.insererPersonne(Personne(role = role.trim(), nom = nom.trim(), numeroDeTelephone = numeroDeTelephone.trim()))
 }
 
 fun ajouterTypeDeTexto(configuration: Configuration, nomDuType: String, motCles: List<String>) {
-    Log.d("Tests", "Ajouter : $nomDuType, $motCles")
     configuration.typesDeTextos!!.ajouterTypeTexto(TypeTexto(nomDuType, motCles.toMutableSet()))
 }
 

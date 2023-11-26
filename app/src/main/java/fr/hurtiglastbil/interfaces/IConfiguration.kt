@@ -45,7 +45,7 @@ interface IConfiguration {
      *
      * @param[cheminDuFichier] Le chemin vers le fichier
      */
-    fun sauvegarder(cheminDuFichier: String)
+    fun sauvegarder(cheminDuFichier: String, subDir : String? = null)
 
     /**
      * Vérifie l'existance du fichier de configuration
@@ -53,7 +53,7 @@ interface IConfiguration {
      * @param[cheminDuFichier] Le chemin vers le fichier
      * @return true si le fichier existe, false sinon
      */
-    fun leFichierExiste(cheminDuFichier: String): Boolean
+    fun leFichierExisteDansLeStockageInterne(cheminDuFichier: String): Boolean
 
     /**
      * Défini le fichier de configuration depuis un fichier interne
@@ -67,5 +67,5 @@ interface IConfiguration {
      *
      * @param[personne] La personne à insérer
      */
-    fun insererPersonne(personne: Personne, cheminDuFichier: String)
+    fun insererPersonne(personne: Personne)
 }

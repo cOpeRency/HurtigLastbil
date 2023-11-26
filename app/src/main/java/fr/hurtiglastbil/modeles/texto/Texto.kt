@@ -13,7 +13,7 @@ abstract class Texto(
 {
     fun enJson(): String {
         val smsData = DonneesTexto(envoyeur, receveur, date, contenu)
-        val json = Json { serializersModule = serializersModuleOf(Date::class, SerialiseurDeDate) }
-        return Json.encodeToString(smsData)
+        val json = Json { serializersModule = serializersModuleOf(Date::class, SerialiseurDeDate); prettyPrint = true }
+        return json.encodeToString(smsData)
     }
 }

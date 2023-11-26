@@ -30,7 +30,7 @@ class TestsTexto {
             ListeDesTypesDeTextos(listeDeTypeDeTexto)
         )
         val json = texto.enJson()
-        val attendu = "{\"envoyeur\":\"0123456789\",\"receveur\":\"0987654321\",\"date\":991,\"contenu\":\"Livraison\"}"
+        val attendu = "{\n    \"envoyeur\": \"0123456789\",\n    \"receveur\": \"0987654321\",\n    \"date\": 991,\n    \"contenu\": \"Livraison\"\n}"
         assertEquals(attendu, json)
     }
 

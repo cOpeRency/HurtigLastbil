@@ -36,7 +36,7 @@ class ListeDesTypesDeTextos(var typeTextos: MutableSet<TypeTexto>? = null) {
     }
 
     fun supprimerTypeTexto(cle: String) {
-        val typeTexto = recupererMotCle(cle)
+        val typeTexto = recupererTypeTexto(cle)
         if (typeTexto!!.valider()) {
             this.typeTextos?.remove(typeTexto)
         } else {
@@ -51,17 +51,22 @@ class ListeDesTypesDeTextos(var typeTextos: MutableSet<TypeTexto>? = null) {
         return jsonArray
     }
 
-    fun recupererMotCle(cle: String): TypeTexto? {
+    fun recupererTypeTextoDepuisCorpsMessage(corpsMessage: String): TypeTexto? {
+        val motsMessage = corpsMessage.split(" ").map { it.lowercase() }
+        return typeTextos?.find { typeTexto -> typeTexto.listeDeMotsCles.any { motsMessage.contains(it) } }
+    }
+
+    fun recupererTypeTexto(cle: String): TypeTexto? {
         return typeTextos?.find { it.cle == cle }
     }
 
     fun recupererLaListeDesMotsCles(cle: String): MutableSet<String>? {
-        return recupererMotCle(cle)?.listeDeMotsCles
+        return recupererTypeTexto(cle)?.listeDeMotsCles
     }
 
     fun ajouterMotCle(cle: String, motCle: String) {
         try  {
-            recupererMotCle(cle)?.ajouterMotCle(motCle)
+            recupererTypeTexto(cle)?.ajouterMotCle(motCle)
         } catch (e: ExceptionNouveauMotCle) {
             Log.e(TagsErreur.ERREUR_AJOUT_MOT_CLE.tag, e.message + " pour le type suivant : "+ cle)
         }
@@ -69,7 +74,7 @@ class ListeDesTypesDeTextos(var typeTextos: MutableSet<TypeTexto>? = null) {
 
     fun supprimerMotCle(cle: String, motCle: String) {
         try {
-            recupererMotCle(cle)?.supprimerMotCle(motCle)
+            recupererTypeTexto(cle)?.supprimerMotCle(motCle)
         } catch (e: ExceptionSuppressionMotCle) {
             Log.e(TagsErreur.ERREUR_SUPPRESSION_MOT_CLE.tag, e.message + " pour le type suivant : "+ cle)
         }
