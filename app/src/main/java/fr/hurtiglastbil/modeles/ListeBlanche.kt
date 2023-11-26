@@ -1,9 +1,10 @@
 package fr.hurtiglastbil.modeles
 
-import android.util.Log
 import fr.hurtiglastbil.enumerations.JsonEnum
 import fr.hurtiglastbil.enumerations.TagsErreur
+import fr.hurtiglastbil.enumerations.TagsModificationConfig
 import fr.hurtiglastbil.interfaces.IListeBlanche
+import fr.hurtiglastbil.utilitaires.Journaliseur
 import org.json.JSONArray
 
 class ListeBlanche : IListeBlanche {
@@ -51,10 +52,10 @@ class ListeBlanche : IListeBlanche {
 
     fun supprimerPersonne(personne: Personne) {
         if (estDansLaListeBlanche(personne)) {
-            Log.d("Tests", "supprimerPersonne: ${personne.numeroDeTelephone}")
+            Journaliseur.journaliserModificationDeLaConfiguration("Suppression personne", "supprimerPersonne: ${personne.numeroDeTelephone}")
             listeBlanche.remove(creerPersonneSiInseree(personne))
         } else {
-            Log.i("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${personne.numeroDeTelephone}")
+            Journaliseur.journaliserErreur("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${personne.numeroDeTelephone}")
         }
     }
 
@@ -63,8 +64,12 @@ class ListeBlanche : IListeBlanche {
             val personne = listeBlanche.find { it.equals(nouvellePersonne) }!!
             personne.nom = nouvellePersonne.nom
             personne.role = nouvellePersonne.role
+            Journaliseur.journaliserModificationDeLaConfiguration(
+                TagsModificationConfig.PERSONNE_MODIFIE.tag,
+                TagsModificationConfig.PERSONNE_MODIFIE.message + ": ${personne.numeroDeTelephone}"
+            )
         } else {
-            Log.i("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${nouvellePersonne.numeroDeTelephone}")
+            Journaliseur.journaliserErreur("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${nouvellePersonne.numeroDeTelephone}")
         }
     }
 
@@ -72,11 +77,14 @@ class ListeBlanche : IListeBlanche {
         if (!estDansLaListeBlanche(personne)) {
             if (personne.valider()) {
                 listeBlanche.add(personne)
+                Journaliseur.journaliserModificationDeLaConfiguration(
+                    TagsModificationConfig.PERSONNE_AJOUTE.tag,
+                    "Nouvelle personne: ${personne.nom}")
             } else {
-                Log.e(TagsErreur.ERREUR_VALIDATION_PERSONNE.tag, TagsErreur.ERREUR_VALIDATION_PERSONNE.message + " donc elle n'est pas insérer.")
+                Journaliseur.journaliserErreur(TagsErreur.ERREUR_VALIDATION_PERSONNE.tag, TagsErreur.ERREUR_VALIDATION_PERSONNE.message + " donc elle n'est pas inséré.")
             }
         } else {
-            Log.i("Personne existe", "La personne avec le numéro suivant existe déjà dans la liste blanche: ${personne.numeroDeTelephone}")
+            Journaliseur.journaliserErreur("Personne existe", "La personne avec le numéro suivant existe déjà dans la liste blanche: ${personne.numeroDeTelephone}")
         }
     }
 

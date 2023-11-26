@@ -3,8 +3,10 @@ package fr.hurtiglastbil.modeles
 import android.content.Context
 import android.util.Log
 import fr.hurtiglastbil.enumerations.JsonEnum
+import fr.hurtiglastbil.enumerations.TagsModificationConfig
 import fr.hurtiglastbil.interfaces.IConfiguration
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
+import fr.hurtiglastbil.utilitaires.Journaliseur
 import org.json.JSONObject
 import java.io.File
 import java.io.InputStream
@@ -85,6 +87,10 @@ class Configuration(val context: Context) : IConfiguration {
 
     fun modifierTempsDeRafraichissement(tempsDeRafraichissement: Int, cheminDuFichier: String) {
         this.tempsDeRafraichissment = tempsDeRafraichissement
+        Journaliseur.journaliserModificationDeLaConfiguration(
+            TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.tag,
+            "${TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.message}: $tempsDeRafraichissement"
+        )
         sauvegarder(cheminDuFichier)
     }
 }

@@ -10,4 +10,5 @@ enum class TagsErreur(val tag: String, val message: String) {
     ERREUR_SUPPRESSION_TYPE_TEXTO("Exception suppression type texto", "Erreur lors de la suppression du type texto"),
     ERREUR_AJOUT_MOT_CLE("Exception ajout mot cle", "Erreur lors de l'ajout du mot cle"),
     ERREUR_SUPPRESSION_MOT_CLE("Exception suppression mot cle", "Erreur lors de la suppression du mot cle"),
+    ERREUR_LOG("Erreur écriture", "Impossible d'écrire dans le fichier de logs"),
 }
