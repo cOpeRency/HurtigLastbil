@@ -18,9 +18,16 @@ fun actionsConfiguration(corpsDuMessage: String, configuration: Configuration) {
             modifier(configuration, ligne)
         } else if (mots[0].lowercase() == "supprimer") {
             supprimer(configuration, ligne)
+        } else if (mots[0].lowercase() == "réinitialiser") {
+            reinitialiser(configuration, ligne)
         }
     }
     configuration.sauvegarder("configuration.dev.json", "config")
+}
+
+fun reinitialiser(configuration: Configuration, ligne : String) {
+    val mots = ligne.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
+    configuration.reinitialiser(Personne(mots[0], Roles.ADMINISTRATEUR.motCle, mots[1].split(" ").joinToString("")))
 }
 
 fun ajouter(configuration: Configuration, ligne: String) {

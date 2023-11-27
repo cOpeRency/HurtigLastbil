@@ -18,7 +18,8 @@ class FabriqueATexto {
         return TextoIndefini(envoyeur, receveur, date, contenu)
     }
 
-    private fun rechercherMotsCles(contenu: String, motsCles: MutableSet<String>): Boolean {
+    private fun rechercherMotsCles(contenu: String, motsCles: MutableSet<String>?): Boolean {
+        if (motsCles == null) return false
         val contenuEnMinuscule = Normalizer.normalize(contenu.lowercase(), Normalizer.Form.NFD)
         motsCles.forEach { motCle ->
             if(contenuEnMinuscule.contains(motCle)) return true
@@ -27,10 +28,10 @@ class FabriqueATexto {
     }
 
     private fun estRendezVousDeLivraison(receveur: String, typesDeTextos: ListeDesTypesDeTextos): Boolean {
-        return rechercherMotsCles(receveur, typesDeTextos.recupererLaListeDesMotsCles("rdv livraison")!!)
+        return rechercherMotsCles(receveur, typesDeTextos.recupererLaListeDesMotsCles("rdv livraison"))
     }
 
     private fun estRendezVousDeRemorqueVide(contenu: String, typesDeTextos: ListeDesTypesDeTextos): Boolean {
-        return rechercherMotsCles(contenu, typesDeTextos.recupererLaListeDesMotsCles("rdv remorque vide")!!)
+        return rechercherMotsCles(contenu, typesDeTextos.recupererLaListeDesMotsCles("rdv remorque vide"))
     }
 }

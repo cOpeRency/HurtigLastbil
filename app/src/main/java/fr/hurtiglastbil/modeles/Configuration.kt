@@ -126,4 +126,11 @@ class Configuration(val context: Context) : IConfiguration {
             updateGallery(context, fichier, subDir)
         }
     }
+
+    fun reinitialiser(administarateur: Personne) {
+        listeBlanche = ListeBlanche()
+        insererPersonne(administarateur)
+        tempsDeRafraichissment = 5
+        typesDeTextos = ListeDesTypesDeTextos()
+    }
 }

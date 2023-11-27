@@ -46,6 +46,9 @@ class ListeDesTypesDeTextos(var typeTextos: MutableSet<TypeTexto>? = null) {
     }
 
     fun listeDeMotsClesVersJSONArray(): JSONArray {
+        if (typeTextos == null) {
+            return JSONArray()
+        }
         val jsonArray = JSONArray()
         typeTextos!!.forEach { jsonArray.put(it.versJSON()) }
         return jsonArray
