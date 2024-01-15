@@ -1,24 +1,24 @@
 {
   "liste blanche" : [
     {
-      "nom" : "Florian RAJOYE",
+      "nom" : "F",
       "role" : "administrateur",
-      "numero" : "0619752459"
+      "numero" : "0600000000"
     },
     {
-      "nom" : "Théo LAVAUZELLE",
+      "nom" : "T",
       "role" : "administrateur",
-      "numero" : "0695839298"
+      "numero" : "0600000001"
     },
     {
-      "nom" : "Erwan BOURGEAULT",
+      "nom" : "E",
       "role" : "administrateur",
-      "numero" : "0769907676"
+      "numero" : "0600000002"
     },
     {
-      "nom" : "Mattéo NADLER CAMPOURCY",
+      "nom" : "M",
       "role" : "administrateur",
-      "numero" : "0643365282"
+      "numero" : "0600000003"
     }
   ],
   "temps de rafraichissement" : 10,
