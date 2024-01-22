@@ -12,6 +12,8 @@ import org.json.JSONObject
 import java.io.File
 import java.io.InputStream
 
+private const val title = "hurtiglastbil"
+
 class Configuration(val context: Context) : IConfiguration {
     /**
      * Liste blanche des numéros de téléphone autorisés
@@ -93,13 +95,13 @@ class Configuration(val context: Context) : IConfiguration {
     }
 
     fun leFichierExisteDansLeStockageExterne(cheminDuFichier: String): Boolean {
-        return File(context.getExternalFilesDir("hurtiglastbil"), cheminDuFichier).exists()
+        return File(context.getExternalFilesDir(title), cheminDuFichier).exists()
     }
 
     fun configurationDepuisStockageExterne(cheminDuFichier: String, subDir: String): Configuration {
         utiliseStockageInterne = false
         if (leFichierExisteDansLeStockageExterne("$subDir/$cheminDuFichier")) {
-            val configStream: InputStream = File(context.getExternalFilesDir("hurtiglastbil"), subDir + "/" +cheminDuFichier).inputStream()
+            val configStream: InputStream = File(context.getExternalFilesDir(title), subDir + "/" +cheminDuFichier).inputStream()
             val configString: String = configStream.reader().readText()
             return configurationDepuisJSON(configString)
         }
@@ -114,10 +116,10 @@ class Configuration(val context: Context) : IConfiguration {
             val fichier = File(context.applicationContext.filesDir, cheminComplet)
             fichier.writeText(configurationVersJSON())
         } else {
-            val fichier = File(context.getExternalFilesDir("hurtiglastbil"), cheminComplet)
+            val fichier = File(context.getExternalFilesDir(title), cheminComplet)
             Log.d("Tests", "chemin du fichier : ${fichier.toString()}")
-            if (subDir != null && !File(context.getExternalFilesDir("hurtiglastbil"), subDir).exists()) {
-                File(context.getExternalFilesDir("hurtiglastbil"), subDir).mkdirs()
+            if (subDir != null && !File(context.getExternalFilesDir(title), subDir).exists()) {
+                File(context.getExternalFilesDir(title), subDir).mkdirs()
             }
             if (!fichier.exists()) {
                 fichier.createNewFile()
