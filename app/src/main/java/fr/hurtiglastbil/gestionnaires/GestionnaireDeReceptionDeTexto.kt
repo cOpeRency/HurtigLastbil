@@ -22,34 +22,46 @@ import java.time.Instant
 import java.util.Date
 
 fun traiterTexto(contexte: Context?, action: Intent?) {
-    val config = Configuration(contexte!!)
+    val config = Configuration(contexte ?: return)
     config.configurationDepuisStockageExterne("configuration.dev.json", "config")
-    if (action != null) {
-        if (action.action == Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
-            val message = Telephony.Sms.Intents.getMessagesFromIntent(action)
-            val expediteur = message.get(0).displayOriginatingAddress
-            val corpsDuMessage = message.get(0).displayMessageBody
-            val horodatage = System.currentTimeMillis()
-            if (config.listeBlanche!!.estDansLaListeBlanche(Personne(numeroDeTelephone = expediteur))) {
-                val personne = config.listeBlanche!!.creerPersonneSiInseree(Personne(numeroDeTelephone = expediteur))
-                if (personne.role == "administrateur") {
-                    if (corpsDuMessage.split("\n")[0].lowercase().startsWith("config") || corpsDuMessage.split("\n")[0].lowercase().startsWith("configuration")) {
-                        actionsConfiguration(corpsDuMessage, config)
-                    }
-                }
-                Log.d("Récepteur de Texto", "Texto reçu de $expediteur  : $corpsDuMessage")
-                Log.d("WHITELIST", "traiterTexto: $expediteur est dans la liste blanche")
 
-                enregistrerLeFichier(contexte, personne, horodatage, corpsDuMessage, config)
-            } else {
-                Log.d("WHITELIST", "traiterTexto: $expediteur n'est pas dans la liste blanche")
-            }
-        } else {
-            //log erreur
-            Log.e(TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.tag, TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.message)
+    if (action?.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
+        // Log an error
+        Log.e(TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.tag, TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.message)
+        return
+    }
+
+    val message = Telephony.Sms.Intents.getMessagesFromIntent(action)
+    if (message.isNullOrEmpty()) {
+        // Log an error
+        Log.e("TEXT_RECEIVER", "No SMS message found in the Intent")
+        return
+    }
+
+    val expediteur = message[0].displayOriginatingAddress
+    val corpsDuMessage = message[0].displayMessageBody
+    val horodatage = System.currentTimeMillis()
+
+    val personne = Personne(numeroDeTelephone = expediteur)
+    val isInWhitelist = config.listeBlanche?.estDansLaListeBlanche(personne) == true
+    if (isInWhitelist) {
+        val personneInList = config.listeBlanche?.creerPersonneSiInseree(personne)
+        if (personneInList?.role == "administrateur" && (corpsDuMessage.startsWith("config", ignoreCase = true) || corpsDuMessage.startsWith("configuration", ignoreCase = true))) {
+            actionsConfiguration(corpsDuMessage, config)
         }
+
+        Log.d("TEXT_RECEIVER", "Texto reçu de $expediteur  : $corpsDuMessage")
+        Log.d("WHITELIST", "traiterTexto: $expediteur est dans la liste blanche")
+
+        personneInList?.let {
+            enregistrerLeFichier(contexte,
+                it, horodatage, corpsDuMessage, config)
+        }
+    } else {
+        Log.d("WHITELIST", "traiterTexto: $expediteur n'est pas dans la liste blanche")
     }
 }
+
 
 private fun enregistrerLeFichier(
     contexte: Context,
