@@ -131,8 +131,8 @@ fun updateGallery(context: Context, file: File, subDir: String? = null) {
 
     var uri: Uri = MediaStore.Files.getContentUri("external")
     if (cursor != null && cursor.moveToFirst()) { //Si fichier existe déjà, on le suppr
-        uri = ContentUris.withAppendedId(uri, cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)?:0))
-        resolver.delete(uri, null, null)
+        val existingUri = ContentUris.withAppendedId(uri, cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)?:0))
+        resolver.delete(existingUri, null, null)
     }
     sauvegarderFichier(resolver,file,uri,contentValues)
     cursor?.close()
