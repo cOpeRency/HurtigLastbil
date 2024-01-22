@@ -11,6 +11,7 @@ import android.provider.Telephony
 import android.util.Log
 import fr.hurtiglastbil.enumerations.TagsErreur
 import fr.hurtiglastbil.modeles.Configuration
+import fr.hurtiglastbil.modeles.EnregistrementFichierParams
 import fr.hurtiglastbil.modeles.FabriqueATexto
 import fr.hurtiglastbil.modeles.Personne
 import fr.hurtiglastbil.modeles.texto.TextoIndefini
@@ -57,8 +58,8 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
         Log.d("WHITELIST", "traiterTexto: $expediteur est dans la liste blanche")
 
         personneInList?.let {
-            enregistrerLeFichier(contexte,
-                it, horodatage, corpsDuMessage, config)
+            val params = EnregistrementFichierParams(contexte, it, horodatage, corpsDuMessage, config)
+            enregistrerLeFichier(params)
         }
     } else {
         Log.d("WHITELIST", "traiterTexto: $expediteur n'est pas dans la liste blanche")
@@ -66,22 +67,16 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
 }
 
 
-private fun enregistrerLeFichier(
-    contexte: Context,
-    expediteur: Personne,
-    horodatage: Long,
-    corpsDuMessage: String?,
-    configuration: Configuration
-) {
+private fun enregistrerLeFichier(params: EnregistrementFichierParams) {
     val subDirBase = "textos"
-    val typeDuTexto = configuration.typesDeTextos!!.recupererTypeTextoDepuisCorpsMessage(corpsDuMessage!!)
+    val typeDuTexto = params.configuration.typesDeTextos!!.recupererTypeTextoDepuisCorpsMessage(params.corpsDuMessage!!)
     Log.d("Tests", "enregistrerLeFichier: $typeDuTexto")
     val subDir: String = if (typeDuTexto != null) {
         "$subDirBase/${typeDuTexto.cle.split(" ").joinToString("/")}"
     } else {
         "$subDirBase/indéfini"
     }
-    val fichier = File(contexte.getExternalFilesDir("hurtiglastbil"), "${expediteur.nom}_${expediteur.numeroDeTelephone}_${horodatage}.log.txt")
+    val fichier = File(params.contexte.getExternalFilesDir("hurtiglastbil"), "${params.expediteur.nom}_${params.expediteur.numeroDeTelephone}_${params.horodatage}.log.txt")
     if (!fichier.exists()) {
         try {
             fichier.createNewFile()
@@ -91,20 +86,20 @@ private fun enregistrerLeFichier(
     }
 
     val texto = FabriqueATexto().creerTexto(
-        expediteur.numeroDeTelephone,
+        params.expediteur.numeroDeTelephone,
         "Hurtiglastbil",
-        Date.from(Instant.ofEpochMilli(horodatage)),
-        corpsDuMessage,
-        configuration.typesDeTextos!!
+        Date.from(Instant.ofEpochMilli(params.horodatage)),
+        params.corpsDuMessage,
+        params.configuration.typesDeTextos!!
     )
     val texteDansFichierDeLog: String = if (!(texto is TextoIndefini)) {
         texto.enJson() + "\n"
     } else {
-        "SMS reçu de ${expediteur.nom} avec le numéro ${expediteur.numeroDeTelephone} : \n$corpsDuMessage"
+        "SMS reçu de ${params.expediteur.nom} avec le numéro ${params.expediteur.numeroDeTelephone} : \n${params.corpsDuMessage}"
     }
 
     // Contenu à écrire dans le fichier
-    Log.d("Récepteur de Texto", contexte.getExternalFilesDir("hurtiglastbil").toString())
+    Log.d("Récepteur de Texto", params.contexte.getExternalFilesDir("hurtiglastbil").toString())
     Log.d("Récepteur de Texto", fichier.readText())
     try {
         val fluxDeFichierSortant = FileOutputStream(
@@ -117,7 +112,7 @@ private fun enregistrerLeFichier(
     } catch (e: IOException) {
         Log.e(TagsErreur.ERREUR_MODIFICATION_FICHIER.tag, TagsErreur.ERREUR_MODIFICATION_FICHIER.message + " de stockage de SMS." )
     }
-    updateGallery(contexte, fichier, subDir)
+    updateGallery(params.contexte, fichier, subDir)
 }
 
 fun updateGallery(context: Context, file: File, subDir: String? = null) {
