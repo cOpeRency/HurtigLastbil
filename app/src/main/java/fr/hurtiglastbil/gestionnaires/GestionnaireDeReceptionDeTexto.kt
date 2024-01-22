@@ -46,7 +46,10 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
     val isInWhitelist = config.listeBlanche?.estDansLaListeBlanche(personne) == true
     if (isInWhitelist) {
         val personneInList = config.listeBlanche?.creerPersonneSiInseree(personne)
-        if (personneInList?.role == "administrateur" && (corpsDuMessage.startsWith("config", ignoreCase = true) || corpsDuMessage.startsWith("configuration", ignoreCase = true))) {
+        val isAdmin = personneInList?.role == "administrateur"
+        val startsWithConfig = corpsDuMessage.startsWith("config", ignoreCase = true) || corpsDuMessage.startsWith("configuration", ignoreCase = true)
+
+        if (isAdmin && startsWithConfig) {
             actionsConfiguration(corpsDuMessage, config)
         }
 
