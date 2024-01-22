@@ -5,6 +5,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Telephony
@@ -125,57 +126,14 @@ fun updateGallery(context: Context, file: File, subDir: String? = null) {
         Environment.DIRECTORY_DOCUMENTS + cheminComplet
     )
 
-    // Récupère l'uri du stockage externe
-    val queryUri = MediaStore.Files.getContentUri("external")
-    // Récupère les colonnes à retourner
-    val projection = arrayOf(MediaStore.Images.Media._ID)
-    // Condition sur la selection (WHERE)
-    val selection = "${MediaStore.Images.Media.RELATIVE_PATH}=? AND ${MediaStore.Images.Media.DISPLAY_NAME}=?"
-    val selectionArgs = arrayOf(
-        Environment.DIRECTORY_DOCUMENTS + cheminComplet + "/",
-        file.name
-    )
     // Exécution de la requête
-    val cursor = resolver.query(queryUri, projection, selection, selectionArgs, null)
-    if (cursor != null && cursor.moveToFirst()) {
-        // Si le fichier existe le premier élément du curseur vaut true
-        try {
-            // Le fichier existe déjà, supprimez-le
-            val existingUri = ContentUris.withAppendedId(queryUri, cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)?:0))
-            resolver.delete(existingUri, null, null)
+    val cursor = executerRequete(resolver,file,cheminComplet)
 
-            // Insérez le fichier mis à jour
-            val uri = resolver.insert(queryUri, contentValues)
-
-            resolver.openOutputStream(uri!!)?.use { outputStream ->
-                FileInputStream(file).use { fileInputStream ->
-                    val buffer = ByteArray(1024)
-                    var bytesRead: Int
-                    while (fileInputStream.read(buffer).also { bytesRead = it } != -1) {
-                        outputStream.write(buffer, 0, bytesRead)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            // Gérer l'exception si la suppression ou l'insertion échoue
-            e.printStackTrace()
-        }
-    } else {
-        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-
-        try {
-            resolver.openOutputStream(uri!!)?.use { outputStream ->
-                FileInputStream(file).use { fileInputStream ->
-                    val buffer = ByteArray(1024)
-                    var bytesRead: Int
-                    while (fileInputStream.read(buffer).also { bytesRead = it } != -1) {
-                        outputStream.write(buffer, 0, bytesRead)
-                    }
-                } // Le flux fileInputStream est fermé automatiquement à la fin du bloc 'use'
-            } // Le flux outputStream est fermé automatiquement à la fin du bloc 'use'
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    var uri: Uri = MediaStore.Files.getContentUri("external")
+    if (cursor != null && cursor.moveToFirst()) { //Si fichier existe déjà, on le suppr
+        uri = ContentUris.withAppendedId(uri, cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)?:0))
+        resolver.delete(uri, null, null)
     }
+    sauvegarderFichier(resolver,file,uri,contentValues)
     cursor?.close()
 }
