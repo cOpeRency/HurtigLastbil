@@ -29,27 +29,20 @@ data class Personne(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other !is Personne) return false
 
-        other as Personne
+        val normalizedThisNumber = normalizePhoneNumber(numeroDeTelephone)
+        val normalizedOtherNumber = normalizePhoneNumber(other.numeroDeTelephone)
 
-        if (numeroDeTelephone.startsWith("0")) {
-            if (other.numeroDeTelephone.startsWith("0")) {
-                if (numeroDeTelephone != other.numeroDeTelephone) return false
-            } else {
-                // Compare les numéros sans leur début (0 ou +33)
-                if (numeroDeTelephone.substring(1) != other.numeroDeTelephone.substring(3)) return false
-            }
-        } else {
-            if (other.numeroDeTelephone.startsWith("0")) {
-                // Compare les numéros sans leur début (0 ou +33)
-                if (numeroDeTelephone.substring(3) != other.numeroDeTelephone.substring(1)) return false
-            } else {
-                if (numeroDeTelephone != other.numeroDeTelephone) return false
-            }
+        return normalizedThisNumber == normalizedOtherNumber
+    }
+
+    private fun normalizePhoneNumber(phoneNumber: String): String {
+        return when {
+            phoneNumber.startsWith("0") -> phoneNumber.substring(1)
+            phoneNumber.startsWith("+33") -> phoneNumber.substring(3)
+            else -> phoneNumber
         }
-
-        return true
     }
 
     fun versJSON(): JSONObject {
