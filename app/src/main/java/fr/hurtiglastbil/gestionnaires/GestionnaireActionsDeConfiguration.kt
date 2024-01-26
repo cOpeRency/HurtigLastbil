@@ -7,86 +7,114 @@ import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.Personne
 import fr.hurtiglastbil.modeles.texto.TypeTexto
 
+data class RoleInfo(val role: String, val nom: String, val numeroDeTelephone: String)
+
+data class TypeTextoInfo(val nomDuType: String, val motCles: List<String>)
+
 fun actionsConfiguration(corpsDuMessage: String, configuration: Configuration) {
-    for (ligne in corpsDuMessage.split("\n")) {
-        if (ligne.startsWith("CONFIG")) continue
-        if (ligne.startsWith("=")) continue
-        val mots = ligne.split(" ")
-        if (mots[0].lowercase() == "ajouter") {
-            Log.d("test", "Ajouter ")
-            ajouter(configuration, ligne)
-        } else if (mots[0].lowercase() == "modifier") {
-            modifier(configuration, ligne)
-        } else if (mots[0].lowercase() == "supprimer") {
-            supprimer(configuration, ligne)
-        } else if (mots[0].lowercase() == "réinitialiser") {
-            reinitialiser(configuration, ligne)
-        }
-    }
+    corpsDuMessage.split("\n").filterNot { it.startsWith("CONFIG") || it.startsWith("=") }
+        .forEach { ligneConfiguration(it, configuration) }
+
     configuration.sauvegarder(CheminFichier("configuration.dev.json", "config"))
 }
 
-fun reinitialiser(configuration: Configuration, ligne : String) {
-    val mots = ligne.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
-    configuration.reinitialiser(Personne(mots[0], Roles.ADMINISTRATEUR.motCle, mots[1].split(" ").joinToString("")))
-}
-
-fun ajouter(configuration: Configuration, ligne: String) {
-    val mots = ligne.split(" ")
-    if (Roles.estUnRole(mots[1].lowercase())) {
-        // AJOUTER administrateUr : Michel, 0617878456
-        val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
-        val donneesPersonne = ligne.split(" : ")[1]
-        ajouterPersonneALaListeBlanche(configuration, role, donneesPersonne.split(",")[0], donneesPersonne.split(",")[1].split(" ").joinToString(""))
-    } else if(mots[1].lowercase() == "type") {
-        // Ajouter type : nouveau type de texto : mot1, mot2, mot3
-        val extraitDeLigne = ligne.split(" : ")
-        ajouterTypeDeTexto(configuration, extraitDeLigne[1], extraitDeLigne[2].split(",").onEach { it.trim() })
-    } else if(mots[1].lowercase() + mots[2].lowercase() == "motsclé") {
-        // Ajouter mots clé : nouveau type de texto : mot1, mot2, mot3
-        val extraitDeLigne = ligne.split(" : ")
-        ajouterMotsCle(configuration, extraitDeLigne[1], extraitDeLigne[2].split(",").onEach { it.trim() })
+private fun ligneConfiguration(line: String, configuration: Configuration) {
+    val words = line.split(" ")
+    when (words[0].lowercase()) {
+        "ajouter" -> ajouter(configuration, line)
+        "modifier" -> modifier(configuration, line)
+        "supprimer" -> supprimer(configuration, line)
+        "réinitialiser" -> reinitialiser(configuration, line)
     }
 }
 
-fun ajouterMotsCle(configuration: Configuration, typeTexto: String, motCles: List<String>) {
-    Log.d("Tests", "Ajouter : $typeTexto, $motCles")
-    for (motCle in motCles) {
-        configuration.typesDeTextos!!.ajouterMotCle(typeTexto, motCle)
+private fun reinitialiser(configuration: Configuration, line: String) {
+    val mots = line.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
+    configuration.reinitialiser(
+        Personne(
+            mots[0],
+            Roles.ADMINISTRATEUR.motCle,
+            mots[1].split(" ").joinToString("")
+        )
+    )
+}
+
+private fun ajouter(configuration: Configuration, line: String) {
+    val mots = line.split(" ")
+    when {
+        Roles.estUnRole(mots[1].lowercase()) -> {
+            val roleInfo = parseRoleInfo(line)
+            ajouterPersonneALaListeBlanche(configuration, roleInfo)
+        }
+        mots[1].lowercase() == "type" -> {
+            val typeTextoInfo = parseTypeTextoInfo(line)
+            ajouterTypeDeTexto(configuration, typeTextoInfo)
+        }
+        (mots[1].lowercase() + mots[2].lowercase()) == "motsclé" -> {
+            val motsCleInfo = parseTypeTextoInfo(line)
+            ajouterMotsCle(configuration, motsCleInfo)
+        }
     }
 }
 
-fun ajouterPersonneALaListeBlanche(configuration: Configuration, role: String, nom: String, numeroDeTelephone: String) {
-    configuration.insererPersonne(Personne(role = role.trim(), nom = nom.trim(), numeroDeTelephone = numeroDeTelephone.trim()))
+private fun parseRoleInfo(line: String): RoleInfo {
+    val role = line.split(" ")[1].lowercase()
+    val donneesPersonne = line.split(" : ")[1]
+    val nom = donneesPersonne.split(",")[0]
+    val numeroDeTelephone = donneesPersonne.split(",")[1].split(" ").joinToString("")
+    return RoleInfo(role, nom, numeroDeTelephone)
 }
 
-fun ajouterTypeDeTexto(configuration: Configuration, nomDuType: String, motCles: List<String>) {
-    configuration.typesDeTextos!!.ajouterTypeTexto(TypeTexto(nomDuType, motCles.toMutableSet()))
+private fun parseTypeTextoInfo(line: String): TypeTextoInfo {
+    val extraitDeLigne = line.split(" : ")
+    val nomDuType = extraitDeLigne[1]
+    val motCles = extraitDeLigne[2].split(",").onEach { it.trim() }
+    return TypeTextoInfo(nomDuType, motCles)
 }
 
-fun modifier(configuration: Configuration, ligne: String) {
-    val mots = ligne.split(" ")
-    if (Roles.estUnRole(mots[1].lowercase())) {
-        // MODIFIER administrateur : Michel 0617878456
-        // MODIFIER camionneur : Michel 0617878456
-        val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
-        val partiePersonne = ligne.split(" : ")[1]
-        val personne = Personne(partiePersonne.split(",")[0], role, partiePersonne.split(",")[1].split(" ").joinToString(""))
-        supprimerPersonne(personne.role!!,personne.nom,personne.numeroDeTelephone, configuration)
-        ajouterPersonneALaListeBlanche(configuration, personne.role!!, personne.nom!!, personne.numeroDeTelephone)
+fun ajouterMotsCle(configuration: Configuration, motsCleInfo: TypeTextoInfo) {
+    Log.d("Tests", "Ajouter : ${motsCleInfo.nomDuType}, ${motsCleInfo.motCles}")
+    for (motCle in motsCleInfo.motCles) {
+        configuration.typesDeTextos!!.ajouterMotCle(motsCleInfo.nomDuType, motCle)
     }
 }
 
-fun supprimer(configuration: Configuration, ligne: String) {
-    val mots = ligne.split(" ")
+fun ajouterPersonneALaListeBlanche(configuration: Configuration, roleInfo: RoleInfo) {
+    configuration.insererPersonne(
+        Personne(
+            role = roleInfo.role.trim(),
+            nom = roleInfo.nom.trim(),
+            numeroDeTelephone = roleInfo.numeroDeTelephone.trim()
+        )
+    )
+}
+
+fun ajouterTypeDeTexto(configuration: Configuration, typeTextoInfo: TypeTextoInfo) {
+    configuration.typesDeTextos!!.ajouterTypeTexto(TypeTexto(typeTextoInfo.nomDuType, typeTextoInfo.motCles.toMutableSet()))
+}
+
+private fun modifier(configuration: Configuration, line: String) {
+    val mots = line.split(" ")
     if (Roles.estUnRole(mots[1].lowercase())) {
-        // SUPPRIMER administrateur : Michel, 0617878456
-        // SUPPRIMER camionneur : 0617878456
-        // SUPPRIMER camionneur : Michel, 0617878456
         val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
-        val donneesPersonne = ligne.split(" : ")[1]
-        var nom : String? = null
-        val numeroDeTelephone : String
+        val partiePersonne = line.split(" : ")[1]
+        val personne = Personne(
+            partiePersonne.split(",")[0],
+            role,
+            partiePersonne.split(",")[1].split(" ").joinToString("")
+        )
+        supprimerPersonne(personne.role!!, personne.nom, personne.numeroDeTelephone, configuration)
+        ajouterPersonneALaListeBlanche(configuration, RoleInfo(role, personne.nom!!, personne.numeroDeTelephone))
+    }
+}
+
+private fun supprimer(configuration: Configuration, line: String) {
+    val mots = line.split(" ")
+    if (Roles.estUnRole(mots[1].lowercase())) {
+        val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
+        val donneesPersonne = line.split(" : ")[1]
+        var nom: String? = null
+        val numeroDeTelephone: String
         if (donneesPersonne.split(",").size == 2) {
             nom = donneesPersonne.split(",")[0]
             numeroDeTelephone = donneesPersonne.split(",")[1].split(" ").joinToString("")
@@ -94,12 +122,10 @@ fun supprimer(configuration: Configuration, ligne: String) {
             numeroDeTelephone = donneesPersonne.split(" ").joinToString("")
         }
         supprimerPersonne(role, nom, numeroDeTelephone, configuration)
-    } else if(mots[1].lowercase() == "type") {
-        // SUPPRIMER type : nouveau type de texto
-        supprimerTypeTexto(ligne, configuration)
-    } else if(mots[1].lowercase() + mots[2].lowercase() == "motsclés") {
-        // SUPPRIMER mots clés : nouveau type de texto : mot1, mot2, mot3
-        val extraitDeLigne = ligne.split(" : ")
+    } else if (mots[1].lowercase() == "type") {
+        supprimerTypeTexto(line, configuration)
+    } else if (mots[1].lowercase() + mots[2].lowercase() == "motsclés") {
+        val extraitDeLigne = line.split(" : ")
         val motsCles = extraitDeLigne[2].split(",").onEach { it.trim() }
         for (motCle in motsCles) {
             configuration.typesDeTextos!!.supprimerMotCle(extraitDeLigne[1], motCle)
