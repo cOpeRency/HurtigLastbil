@@ -7,7 +7,11 @@ import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.Personne
 import fr.hurtiglastbil.modeles.texto.TypeTexto
 
-data class RoleInfo(val role: String, val nom: String, val numeroDeTelephone: String)
+data class Role(val value: String)
+data class Nom(val value: String)
+data class NumeroDeTelephone(val value: String)
+
+data class RoleInfo(val role: Role, val nom: Nom, val numeroDeTelephone: NumeroDeTelephone)
 
 data class TypeTextoInfo(val nomDuType: String, val motCles: List<String>)
 
@@ -32,9 +36,9 @@ private fun reinitialiser(configuration: Configuration, line: String) {
     val mots = line.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
     configuration.reinitialiser(
         Personne(
-            mots[0],
+            Role(mots[0]).value,
             Roles.ADMINISTRATEUR.motCle,
-            mots[1].split(" ").joinToString("")
+            NumeroDeTelephone(mots[1].split(" ").joinToString("")).value
         )
     )
 }
@@ -58,10 +62,10 @@ private fun ajouter(configuration: Configuration, line: String) {
 }
 
 private fun parseRoleInfo(line: String): RoleInfo {
-    val role = line.split(" ")[1].lowercase()
+    val role = Role(line.split(" ")[1].lowercase())
     val donneesPersonne = line.split(" : ")[1]
-    val nom = donneesPersonne.split(",")[0]
-    val numeroDeTelephone = donneesPersonne.split(",")[1].split(" ").joinToString("")
+    val nom = Nom(donneesPersonne.split(",")[0])
+    val numeroDeTelephone = NumeroDeTelephone(donneesPersonne.split(",")[1].split(" ").joinToString(""))
     return RoleInfo(role, nom, numeroDeTelephone)
 }
 
@@ -82,9 +86,9 @@ fun ajouterMotsCle(configuration: Configuration, motsCleInfo: TypeTextoInfo) {
 fun ajouterPersonneALaListeBlanche(configuration: Configuration, roleInfo: RoleInfo) {
     configuration.insererPersonne(
         Personne(
-            role = roleInfo.role.trim(),
-            nom = roleInfo.nom.trim(),
-            numeroDeTelephone = roleInfo.numeroDeTelephone.trim()
+            role = roleInfo.role.value,
+            nom = roleInfo.nom.value,
+            numeroDeTelephone = roleInfo.numeroDeTelephone.value
         )
     )
 }
@@ -104,7 +108,7 @@ private fun modifier(configuration: Configuration, line: String) {
             partiePersonne.split(",")[1].split(" ").joinToString("")
         )
         supprimerPersonne(personne.role!!, personne.nom, personne.numeroDeTelephone, configuration)
-        ajouterPersonneALaListeBlanche(configuration, RoleInfo(role, personne.nom!!, personne.numeroDeTelephone))
+        ajouterPersonneALaListeBlanche(configuration, RoleInfo(Role(role), Nom(personne.nom!!), NumeroDeTelephone(personne.numeroDeTelephone)))
     }
 }
 
