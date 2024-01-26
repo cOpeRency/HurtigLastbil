@@ -16,9 +16,9 @@ import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.EnregistrementFichierParams
 import fr.hurtiglastbil.modeles.FabriqueATexto
 import fr.hurtiglastbil.modeles.Personne
+import fr.hurtiglastbil.modeles.texto.DonneesTexto
 import fr.hurtiglastbil.modeles.texto.TextoIndefini
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.Instant
@@ -88,10 +88,12 @@ private fun enregistrerLeFichier(params: EnregistrementFichierParams) {
     }
 
     val texto = FabriqueATexto().creerTexto(
-        params.expediteur.numeroDeTelephone,
-        "Hurtiglastbil",
-        Date.from(Instant.ofEpochMilli(params.horodatage)),
-        params.corpsDuMessage,
+        DonneesTexto(
+            envoyeur = params.expediteur.numeroDeTelephone,
+            receveur = "Hurtiglastbil",
+            date = Date.from(Instant.ofEpochMilli(params.horodatage)),
+            contenu = params.corpsDuMessage
+        ),
         params.configuration.typesDeTextos!!
     )
     val texteDansFichierDeLog: String = if (!(texto is TextoIndefini)) {
