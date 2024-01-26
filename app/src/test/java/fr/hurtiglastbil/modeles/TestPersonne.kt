@@ -20,7 +20,7 @@ class TestPersonne {
     }
 
     @Test
-    fun deux_personnes_avec_le_même_numéro_de_telephone_sont_egales() {
+    fun deuxPersonnesAvecLeMemeNumeroDeTelephoneSontEgales() {
         val personne1 = Personne("John Doe", "CEO", "0123456789")
         val personne2 = Personne("Jane Doe", "Manager", "0123456789")
 
@@ -28,7 +28,7 @@ class TestPersonne {
     }
 
     @Test
-    fun deux_personnes_avec_des_numéros_de_telephone_differents_ne_sont_pas_egales() {
+    fun deuxPersonnesAvecDesNumerosDeTelephoneDifferentsNeSontPasEgales() {
         val personne1 = Personne("John Doe", "CEO", "0123456789")
         val personne2 = Personne("Jane Doe", "Manager", "0987654321")
 
@@ -36,7 +36,7 @@ class TestPersonne {
     }
 
     @Test
-    fun le_hashCode_de_deux_personnes_identiques_doit_être_le_meme() {
+    fun leHashCodeDeDeuxPersonnesIdentiquesDoitEtreLeMeme() {
         val personne1 = Personne("John Doe", "CEO", "0123456789")
         val personne2 = Personne("John Doe", "CEO", "0123456789")
 
@@ -44,19 +44,19 @@ class TestPersonne {
     }
 
     @Test
-    fun personne_valide_passe_la_validation() {
+    fun personneValidePasseLaValidation() {
         val personne = Personne("John Doe", "CEO", "0123456789")
         assertThat(!personne.valider()).isTrue()
     }
 
     @Test
-    fun validation_echoue_pour_numéro_de_téléphone_invalide() {
+    fun validationEchouePourNumeroDeTelephoneInvalide() {
         val personne = Personne("John Doe", "CEO", "invalidPhone")
         assertThat(personne.valider()).isFalse()
     }
 
     @Test
-    fun json_genere_correspond_aux_donnees_de_la_personne() {
+    fun jsonGenereCorrespondAuxDonneesDeLaPersonne() {
         val personne = Personne("John Doe", "CEO", "0123456789")
         val json = personne.versJSON()
 
@@ -66,7 +66,7 @@ class TestPersonne {
     }
 
     @Test
-    fun validation_echoue_pour_des_valeurs_non_valides() {
+    fun validationEchouePourDesValeursNonValides() {
         val personneAvecNomVide = Personne("", "CEO", "0123456789")
         val personneAvecRoleVide = Personne("John Doe", "", "0123456789")
         val personneAvecNumeroVide = Personne("John Doe", "CEO", "")
