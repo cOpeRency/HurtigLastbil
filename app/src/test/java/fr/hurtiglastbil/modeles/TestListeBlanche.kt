@@ -31,7 +31,7 @@ class TestListeBlanche {
     }
 
     @Test
-    fun personne_est_dans_la_liste_blanche() {
+    fun personne_ajoute_dans_la_liste_blanche_est_present_dans_la_liste_blanche() {
         val personne = Personne("John Doe", "CEO", "0123456789")
         val whiteList = ListeBlanche()
         whiteList.listeBlanche.add(personne)
@@ -40,7 +40,7 @@ class TestListeBlanche {
     }
 
     @Test
-    fun personne_nest_pas_dans_la_liste_blanche() {
+    fun personne_pas_ajoute_nest_pas_present_dans_la_liste_blanche() {
         val personne = Personne("John Doe", "CEO", "0123456789")
         val whiteList = ListeBlanche()
 

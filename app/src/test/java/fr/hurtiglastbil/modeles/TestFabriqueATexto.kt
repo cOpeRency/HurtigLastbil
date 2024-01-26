@@ -21,7 +21,7 @@ class TestsTexto {
     }
 
     @Test
-    fun test_serialisation_texto(){
+    fun retourne_un_texto_serialise(){
         val texto = fabriqueATexto.creerTexto(
             "0123456789",
             "0987654321",
@@ -35,7 +35,7 @@ class TestsTexto {
     }
 
     @Test
-    fun test_est_rdv_livraison(){
+    fun texto_est_un_rendez_vous_de_livraison(){
         val texto = fabriqueATexto.creerTexto(
             "0123456789",
             "0987654321",
@@ -47,7 +47,7 @@ class TestsTexto {
     }
 
     @Test
-    fun test_est_rdv_remorque_vide() {
+    fun texto_est_un_rendez_vous_avec_remorque_vide() {
         val texto = fabriqueATexto.creerTexto(
             "0123456789",
             "0987654321",
