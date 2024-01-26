@@ -1,5 +1,6 @@
 package fr.hurtiglastbil.modeles
 
+import fr.hurtiglastbil.modeles.texto.DonneesTexto
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
 import fr.hurtiglastbil.modeles.texto.TextoRendezVousLivraison
 import fr.hurtiglastbil.modeles.texto.TypeTexto
@@ -7,6 +8,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.time.Instant
 import java.util.Date
 
 class TestFabriqueATexto {
@@ -23,10 +25,12 @@ class TestFabriqueATexto {
     @Test
     fun retourne_un_texto_serialise(){
         val texto = fabriqueATexto.creerTexto(
-            "0123456789",
-            "0987654321",
-            Date(991),
-            "Livraison",
+            DonneesTexto(
+                envoyeur = "0123456789",
+                receveur = "0987654321",
+                date = Date(991),
+                contenu =  "Livraison",
+            ),
             ListeDesTypesDeTextos(listeDeTypeDeTexto)
         )
         val json = texto.enJson()
@@ -37,10 +41,12 @@ class TestFabriqueATexto {
     @Test
     fun texto_est_un_rendez_vous_de_livraison(){
         val texto = fabriqueATexto.creerTexto(
-            "0123456789",
-            "0987654321",
-            Date(991),
-            "Livraison",
+            DonneesTexto(
+                envoyeur = "0123456789",
+                receveur = "0987654321",
+                date = Date(991),
+                contenu =  "Livraison",
+            ),
             ListeDesTypesDeTextos(listeDeTypeDeTexto)
         )
         assertTrue(texto is TextoRendezVousLivraison)
@@ -49,10 +55,12 @@ class TestFabriqueATexto {
     @Test
     fun texto_est_un_rendez_vous_avec_remorque_vide() {
         val texto = fabriqueATexto.creerTexto(
-            "0123456789",
-            "0987654321",
-            Date(991),
-            "Remorque vide",
+            DonneesTexto(
+                envoyeur = "0123456789",
+                receveur = "0987654321",
+                date = Date(991),
+                contenu =  "Remorque vide",
+            ),
             ListeDesTypesDeTextos(listeDeTypeDeTexto)
         )
         assertTrue(texto is TextoRendezVousLivraison)
