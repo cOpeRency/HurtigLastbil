@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.provider.Telephony
 import android.util.Log
 import fr.hurtiglastbil.enumerations.TagsErreur
+import fr.hurtiglastbil.modeles.CheminFichier
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.EnregistrementFichierParams
 import fr.hurtiglastbil.modeles.FabriqueATexto
@@ -25,7 +26,7 @@ import java.util.Date
 
 fun traiterTexto(contexte: Context?, action: Intent?) {
     val config = Configuration(contexte ?: return)
-    config.configurationDepuisStockageExterne("configuration.dev.json", "config")
+    config.configurationDepuisStockageExterne(CheminFichier("configuration.dev.json", "config"))
 
     if (action?.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
         // Log an error

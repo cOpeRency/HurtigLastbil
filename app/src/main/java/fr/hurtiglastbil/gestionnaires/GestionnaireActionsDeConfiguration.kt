@@ -2,6 +2,7 @@ package fr.hurtiglastbil.gestionnaires
 
 import android.util.Log
 import fr.hurtiglastbil.enumerations.Roles
+import fr.hurtiglastbil.modeles.CheminFichier
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.Personne
 import fr.hurtiglastbil.modeles.texto.TypeTexto
@@ -22,7 +23,7 @@ fun actionsConfiguration(corpsDuMessage: String, configuration: Configuration) {
             reinitialiser(configuration, ligne)
         }
     }
-    configuration.sauvegarder("configuration.dev.json", "config")
+    configuration.sauvegarder(CheminFichier("configuration.dev.json", "config"))
 }
 
 fun reinitialiser(configuration: Configuration, ligne : String) {
