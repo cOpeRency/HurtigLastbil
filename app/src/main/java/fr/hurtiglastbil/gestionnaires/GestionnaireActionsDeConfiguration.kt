@@ -8,44 +8,56 @@ import fr.hurtiglastbil.modeles.Personne
 import fr.hurtiglastbil.modeles.texto.TypeTexto
 
 fun actionsConfiguration(corpsDuMessage: String, configuration: Configuration) {
-    for (ligne in corpsDuMessage.split("\n")) {
-        if (ligne.startsWith("CONFIG")) continue
-        if (ligne.startsWith("=")) continue
-        val mots = ligne.split(" ")
-        if (mots[0].lowercase() == "ajouter") {
-            Log.d("test", "Ajouter ")
-            ajouter(configuration, ligne)
-        } else if (mots[0].lowercase() == "modifier") {
-            modifier(configuration, ligne)
-        } else if (mots[0].lowercase() == "supprimer") {
-            supprimer(configuration, ligne)
-        } else if (mots[0].lowercase() == "réinitialiser") {
-            reinitialiser(configuration, ligne)
-        }
-    }
+    corpsDuMessage.split("\n").filterNot { it.startsWith("CONFIG") || it.startsWith("=") }
+        .forEach { ligneConfiguration(it, configuration) }
+
     configuration.sauvegarder(CheminFichier("configuration.dev.json", "config"))
 }
 
-fun reinitialiser(configuration: Configuration, ligne : String) {
-    val mots = ligne.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
+private fun ligneConfiguration(line: String, configuration: Configuration) {
+    val words = line.split(" ")
+    when (words[0].lowercase()) {
+        "ajouter" -> ajouter(configuration, line)
+        "modifier" -> modifier(configuration, line)
+        "supprimer" -> supprimer(configuration, line)
+        "réinitialiser" -> reinitialiser(configuration, line)
+    }
+}
+
+private fun reinitialiser(configuration: Configuration, line: String) {
+    val mots = line.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
     configuration.reinitialiser(Personne(mots[0], Roles.ADMINISTRATEUR.motCle, mots[1].split(" ").joinToString("")))
 }
 
-fun ajouter(configuration: Configuration, ligne: String) {
-    val mots = ligne.split(" ")
-    if (Roles.estUnRole(mots[1].lowercase())) {
-        // AJOUTER administrateUr : Michel, 0617878456
-        val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
-        val donneesPersonne = ligne.split(" : ")[1]
-        ajouterPersonneALaListeBlanche(configuration, role, donneesPersonne.split(",")[0], donneesPersonne.split(",")[1].split(" ").joinToString(""))
-    } else if(mots[1].lowercase() == "type") {
-        // Ajouter type : nouveau type de texto : mot1, mot2, mot3
-        val extraitDeLigne = ligne.split(" : ")
-        ajouterTypeDeTexto(configuration, extraitDeLigne[1], extraitDeLigne[2].split(",").onEach { it.trim() })
-    } else if(mots[1].lowercase() + mots[2].lowercase() == "motsclé") {
-        // Ajouter mots clé : nouveau type de texto : mot1, mot2, mot3
-        val extraitDeLigne = ligne.split(" : ")
-        ajouterMotsCle(configuration, extraitDeLigne[1], extraitDeLigne[2].split(",").onEach { it.trim() })
+private fun ajouter(configuration: Configuration, line: String) {
+    val mots = line.split(" ")
+    when {
+        Roles.estUnRole(mots[1].lowercase()) -> {
+            val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
+            val donneesPersonne = line.split(" : ")[1]
+            ajouterPersonneALaListeBlanche(
+                configuration,
+                role,
+                donneesPersonne.split(",")[0],
+                donneesPersonne.split(",")[1].split(" ").joinToString("")
+            )
+        }
+
+        mots[1].lowercase() == "type" -> {
+            val extraitDeLigne = line.split(" : ")
+            ajouterTypeDeTexto(
+                configuration,
+                extraitDeLigne[1],
+                extraitDeLigne[2].split(",").onEach { it.trim() })
+        }
+
+        (mots[1].lowercase() + mots[2].lowercase()) == "motsclé" -> {
+            val extraitDeLigne = line.split(" : ")
+            ajouterMotsCle(
+                configuration,
+                extraitDeLigne[1],
+                extraitDeLigne[2].split(",").onEach { it.trim() })
+        }
     }
 }
 
