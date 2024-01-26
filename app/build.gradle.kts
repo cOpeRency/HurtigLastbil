@@ -8,7 +8,7 @@ val mockkVersion="1.13.8"
 val robolectricVersion="4.11.1"
 val espressoVersion="3.5.1"
 val kotlinSerializationVersion="1.6.1"
-val junit5Version="5.8.1"
+val junit5Version="1.1.5"
 val espressoCoreVersion="3.5.1"
 
 
