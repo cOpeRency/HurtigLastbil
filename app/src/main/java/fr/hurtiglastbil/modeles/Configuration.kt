@@ -67,17 +67,6 @@ class Configuration(val context: Context) : IConfiguration {
         return configurationDepuisJSON(configString)
     }
 
-    override fun configurationDepuisFichierInterne(cheminDuFichier: String): Configuration {
-        if (leFichierExisteDansLeStockageInterne(cheminDuFichier)) {
-            val configStream: InputStream = context.openFileInput(cheminDuFichier)
-            val configString: String = configStream.reader().readText()
-            return configurationDepuisJSON(configString)
-        }
-        val config = configurationDepuisAssets(cheminDuFichier)
-        config.sauvegarder(cheminDuFichier)
-        return this
-    }
-
     override fun insererPersonne(personne: Personne) {
         this.listeBlanche!!.insererPersonne(personne)
     }
@@ -96,18 +85,6 @@ class Configuration(val context: Context) : IConfiguration {
 
     fun leFichierExisteDansLeStockageExterne(cheminDuFichier: String): Boolean {
         return File(context.getExternalFilesDir(title), cheminDuFichier).exists()
-    }
-
-    fun configurationDepuisStockageExterne(cheminDuFichier: String, subDir: String): Configuration {
-        utiliseStockageInterne = false
-        if (leFichierExisteDansLeStockageExterne("$subDir/$cheminDuFichier")) {
-            val configStream: InputStream = File(context.getExternalFilesDir(title), subDir + "/" +cheminDuFichier).inputStream()
-            val configString: String = configStream.reader().readText()
-            return configurationDepuisJSON(configString)
-        }
-        val config = configurationDepuisAssets(cheminDuFichier)
-        config.sauvegarder(cheminDuFichier, subDir)
-        return this
     }
 
     override fun sauvegarder(cheminDuFichier: String, subDir: String?) {
@@ -135,4 +112,35 @@ class Configuration(val context: Context) : IConfiguration {
         tempsDeRafraichissment = 5
         typesDeTextos = ListeDesTypesDeTextos()
     }
+
+    private fun loadConfigurationFromStorage(cheminDuFichier: String, isInternal: Boolean, subDir: String?): Configuration {
+        val fileDirectory = if (isInternal) {
+            context.applicationContext.filesDir
+        } else {
+            context.getExternalFilesDir(title)
+        }
+
+        val fullPath = if (subDir != null) "$subDir/$cheminDuFichier" else cheminDuFichier
+        val file = File(fileDirectory, fullPath)
+
+        if (file.exists()) {
+            val configStream: InputStream = file.inputStream()
+            val configString: String = configStream.reader().readText()
+            return configurationDepuisJSON(configString)
+        }
+
+        val config = configurationDepuisAssets(cheminDuFichier)
+        config.sauvegarder(cheminDuFichier, subDir)
+        return this
+    }
+
+    override fun configurationDepuisFichierInterne(cheminDuFichier: String): Configuration {
+        return loadConfigurationFromStorage(cheminDuFichier, true, null)
+    }
+
+    fun configurationDepuisStockageExterne(cheminDuFichier: String, subDir: String): Configuration {
+        utiliseStockageInterne = false
+        return loadConfigurationFromStorage(cheminDuFichier, false, subDir)
+    }
+
 }
