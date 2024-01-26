@@ -9,7 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Date
 
-class TestsTexto {
+class TestFabriqueATexto {
     private lateinit var fabriqueATexto: FabriqueATexto
     private val listeDeTypeDeTexto : MutableSet<TypeTexto> = mutableSetOf(
         TypeTexto("rdv livraison", mutableSetOf("livraison", "sodimat", "ecoval", "7h", "9h", "retour depot")),
