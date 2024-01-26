@@ -1,5 +1,6 @@
 package fr.hurtiglastbil.interfaces
 
+import fr.hurtiglastbil.modeles.CheminFichier
 import fr.hurtiglastbil.modeles.Personne
 import org.json.JSONObject
 
@@ -45,7 +46,7 @@ interface IConfiguration {
      *
      * @param[cheminDuFichier] Le chemin vers le fichier
      */
-    fun sauvegarder(cheminDuFichier: String, subDir : String? = null)
+    fun sauvegarder(cheminDuFichier: CheminFichier)
 
     /**
      * Vérifie l'existance du fichier de configuration
@@ -60,7 +61,16 @@ interface IConfiguration {
      *
      * @param[cheminDuFichier] Le chemin vers le fichier
      */
-    fun configurationDepuisFichierInterne(cheminDuFichier: String): IConfiguration
+    fun configurationDepuisFichierInterne(cheminDuFichier: CheminFichier): IConfiguration
+
+    /**
+     * Défini le fichier de configuration depuis un fichier externe
+     *
+     * @param[cheminDuFichier] Le chemin vers le fichier
+     */
+    fun configurationDepuisStockageExterne(cheminDuFichier: CheminFichier): IConfiguration
+
+
 
     /**
      * Insère une nouvelle personne dans la liste blanche
