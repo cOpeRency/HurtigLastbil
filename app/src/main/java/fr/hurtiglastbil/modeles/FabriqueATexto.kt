@@ -1,14 +1,19 @@
 package fr.hurtiglastbil.modeles
 
+import fr.hurtiglastbil.modeles.texto.DonneesTexto
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
 import fr.hurtiglastbil.modeles.texto.TextoRendezVousLivraison
 import fr.hurtiglastbil.modeles.texto.Texto
 import fr.hurtiglastbil.modeles.texto.TextoIndefini
 import java.text.Normalizer
-import java.util.Date
 
 class FabriqueATexto {
-    fun creerTexto(envoyeur: String, receveur: String, date: Date, contenu: String, listeDesTypesDeTextos: ListeDesTypesDeTextos): Texto {
+    fun creerTexto(donnees : DonneesTexto, listeDesTypesDeTextos: ListeDesTypesDeTextos): Texto {
+        val envoyeur = donnees.envoyeur
+        val receveur = donnees.receveur
+        val date = donnees.date
+        val contenu = donnees.contenu
+
         if(estRendezVousDeLivraison(contenu, listeDesTypesDeTextos)){
             return TextoRendezVousLivraison(envoyeur, receveur, date, contenu)
         }
