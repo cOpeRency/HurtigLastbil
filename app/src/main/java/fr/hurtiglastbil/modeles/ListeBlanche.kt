@@ -35,7 +35,7 @@ class ListeBlanche : IListeBlanche {
 
     override fun estDansLaListeBlanche(personne: Personne): Boolean {
         for (personneDansLaListe in listeBlanche) {
-            if (personneDansLaListe.equals(personne)) {
+            if (personneDansLaListe == personne) {
                 return true
             }
         }
@@ -43,10 +43,10 @@ class ListeBlanche : IListeBlanche {
     }
 
     override fun creerPersonneSiInseree(personne: Personne): Personne {
-        if (estDansLaListeBlanche(personne)) {
-            return listeBlanche.find { it.equals(personne) }!!
+        return if (estDansLaListeBlanche(personne)) {
+            listeBlanche.find { it == personne }!!
         } else {
-            return personne
+            personne
         }
     }
 
@@ -61,7 +61,7 @@ class ListeBlanche : IListeBlanche {
 
     fun modifierPersonne(nouvellePersonne: Personne) {
         if (estDansLaListeBlanche(Personne(numeroDeTelephone = nouvellePersonne.numeroDeTelephone))) {
-            val personne = listeBlanche.find { it.equals(nouvellePersonne) }!!
+            val personne = listeBlanche.find { it == nouvellePersonne }!!
             personne.nom = nouvellePersonne.nom
             personne.role = nouvellePersonne.role
             Journaliseur.journaliserModificationDeLaConfiguration(
