@@ -10,7 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Telephony
 import android.util.Log
-import fr.hurtiglastbil.enumerations.TagsErreur
+import fr.hurtiglastbil.exceptions.TagsErreur
 import fr.hurtiglastbil.modeles.CheminFichier
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.EnregistrementFichierParams
@@ -96,7 +96,7 @@ private fun enregistrerLeFichier(params: EnregistrementFichierParams) {
         ),
         params.configuration.typesDeTextos!!
     )
-    val texteDansFichierDeLog: String = if (!(texto is TextoIndefini)) {
+    val texteDansFichierDeLog: String = if (texto !is TextoIndefini) {
         texto.enJson() + "\n"
     } else {
         "SMS reçu de ${params.expediteur.nom} avec le numéro ${params.expediteur.numeroDeTelephone} : \n${params.corpsDuMessage}"
@@ -132,8 +132,8 @@ fun updateGallery(context: Context, file: File, subDir: String? = null) {
     // Exécution de la requête
     val cursor = executerRequete(resolver,file,cheminComplet)
 
-    var uri: Uri = MediaStore.Files.getContentUri("external")
-    if (cursor != null && cursor.moveToFirst()) { //Si fichier existe déjà, on le suppr
+    val uri: Uri = MediaStore.Files.getContentUri("external")
+    if (cursor != null && cursor.moveToFirst()) {
         val existingUri = ContentUris.withAppendedId(uri, cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)?:0))
         resolver.delete(existingUri, null, null)
     }

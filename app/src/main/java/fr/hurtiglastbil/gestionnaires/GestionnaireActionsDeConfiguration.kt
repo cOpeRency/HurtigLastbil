@@ -1,7 +1,7 @@
 package fr.hurtiglastbil.gestionnaires
 
 import android.util.Log
-import fr.hurtiglastbil.enumerations.Roles
+import fr.hurtiglastbil.modeles.Roles
 import fr.hurtiglastbil.modeles.CheminFichier
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.Personne
@@ -116,25 +116,29 @@ private fun modifier(configurationLine: ConfigurationLine) {
 
 private fun supprimer(configurationLine: ConfigurationLine) {
     val mots = configurationLine.line.split(" ")
-    if (Roles.estUnRole(mots[1].lowercase())) {
-        val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
-        val donneesPersonne = configurationLine.line.split(" : ")[1]
-        var nom: String? = null
-        val numeroDeTelephone: String
-        if (donneesPersonne.split(",").size == 2) {
-            nom = donneesPersonne.split(",")[0]
-            numeroDeTelephone = donneesPersonne.split(",")[1].split(" ").joinToString("")
-        } else {
-            numeroDeTelephone = donneesPersonne.split(" ").joinToString("")
+    when {
+        Roles.estUnRole(mots[1].lowercase()) -> {
+            val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
+            val donneesPersonne = configurationLine.line.split(" : ")[1]
+            var nom: String? = null
+            val numeroDeTelephone: String
+            if (donneesPersonne.split(",").size == 2) {
+                nom = donneesPersonne.split(",")[0]
+                numeroDeTelephone = donneesPersonne.split(",")[1].split(" ").joinToString("")
+            } else {
+                numeroDeTelephone = donneesPersonne.split(" ").joinToString("")
+            }
+            supprimerPersonne(role, nom, numeroDeTelephone, configurationLine.configuration)
         }
-        supprimerPersonne(role, nom, numeroDeTelephone, configurationLine.configuration)
-    } else if (mots[1].lowercase() == "type") {
-        supprimerTypeTexto(configurationLine)
-    } else if (mots[1].lowercase() + mots[2].lowercase() == "motsclés") {
-        val extraitDeLigne = configurationLine.line.split(" : ")
-        val motsCles = extraitDeLigne[2].split(",").onEach { it.trim() }
-        for (motCle in motsCles) {
-            configurationLine.configuration.typesDeTextos!!.supprimerMotCle(extraitDeLigne[1], motCle)
+        mots[1].lowercase() == "type" -> {
+            supprimerTypeTexto(configurationLine)
+        }
+        mots[1].lowercase() + mots[2].lowercase() == "motsclés" -> {
+            val extraitDeLigne = configurationLine.line.split(" : ")
+            val motsCles = extraitDeLigne[2].split(",").onEach { it.trim() }
+            for (motCle in motsCles) {
+                configurationLine.configuration.typesDeTextos!!.supprimerMotCle(extraitDeLigne[1], motCle)
+            }
         }
     }
 }

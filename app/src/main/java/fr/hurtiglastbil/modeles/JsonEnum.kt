@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.enumerations
+package fr.hurtiglastbil.modeles
 
 enum class JsonEnum(val cle: String) {
     DELAI_DE_RAFRAICHISSEMENT("temps de rafraichissement"),

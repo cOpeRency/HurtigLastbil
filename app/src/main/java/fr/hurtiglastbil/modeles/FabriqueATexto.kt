@@ -23,7 +23,7 @@ class FabriqueATexto {
         return TextoIndefini(envoyeur, receveur, date, contenu)
     }
 
-    private fun rechercherMotsCles(contenu: String, motsCles: MutableSet<String>?): Boolean {
+    private fun rechercherMotsCles(contenu: String, motsCles: Set<String>?): Boolean {
         if (motsCles == null) return false
         val contenuEnMinuscule = Normalizer.normalize(contenu.lowercase(), Normalizer.Form.NFD)
         motsCles.forEach { motCle ->

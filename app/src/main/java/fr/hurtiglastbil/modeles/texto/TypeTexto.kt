@@ -1,6 +1,6 @@
 package fr.hurtiglastbil.modeles.texto
 
-import fr.hurtiglastbil.enumerations.Regles
+import fr.hurtiglastbil.modeles.Regles
 import fr.hurtiglastbil.exceptions.ExceptionNouveauMotCle
 import fr.hurtiglastbil.exceptions.ExceptionSuppressionMotCle
 import fr.hurtiglastbil.modeles.validateur.Validateur

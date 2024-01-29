@@ -1,7 +1,5 @@
 package fr.hurtiglastbil.modeles
 
-import fr.hurtiglastbil.enumerations.JsonEnum
-import fr.hurtiglastbil.enumerations.Regles
 import fr.hurtiglastbil.modeles.validateur.Validateur
 import org.json.JSONObject
 
@@ -46,7 +44,8 @@ data class Personne(
     }
 
     fun versJSON(): JSONObject {
-        return JSONObject().put(JsonEnum.NOM_PERSONNE.cle, nom).put(JsonEnum.ROLE_PERSONNE.cle, role).put(JsonEnum.NUMERO_DE_TELEPHONE_PERSONNE.cle, numeroDeTelephone)
+        return JSONObject().put(JsonEnum.NOM_PERSONNE.cle, nom).put(JsonEnum.ROLE_PERSONNE.cle, role).put(
+            JsonEnum.NUMERO_DE_TELEPHONE_PERSONNE.cle, numeroDeTelephone)
     }
 
     override fun hashCode(): Int {

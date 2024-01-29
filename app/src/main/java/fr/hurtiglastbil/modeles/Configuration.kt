@@ -2,12 +2,9 @@ package fr.hurtiglastbil.modeles
 
 import android.content.Context
 import android.util.Log
-import fr.hurtiglastbil.enumerations.JsonEnum
 import fr.hurtiglastbil.gestionnaires.updateGallery
-import fr.hurtiglastbil.enumerations.TagsModificationConfig
 import fr.hurtiglastbil.interfaces.IConfiguration
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
-import fr.hurtiglastbil.utilitaires.Journaliseur
 import org.json.JSONObject
 import java.io.File
 import java.io.InputStream
@@ -36,7 +33,8 @@ class Configuration(private val context: Context) : IConfiguration {
     private var utiliseStockageInterne : Boolean = true
 
     override fun configurationDepuisJSONObject(json: JSONObject): Configuration {
-        listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(JsonEnum.LISTE_BLANCHE.cle))
+        listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(
+            JsonEnum.LISTE_BLANCHE.cle))
         tempsDeRafraichissment = json.getInt(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle)
         typesDeTextos = ListeDesTypesDeTextos().creerDepuisJSONArray(json.getJSONArray(JsonEnum.TYPES_DE_TEXTO.cle))
 
@@ -73,18 +71,6 @@ class Configuration(private val context: Context) : IConfiguration {
 
     override fun leFichierExisteDansLeStockageInterne(cheminDuFichier: String): Boolean {
         return File(context.applicationContext.filesDir, cheminDuFichier).exists()
-    }
-
-    fun modifierTempsDeRafraichissement(rafraichissement: Rafraichissement) {
-        this.tempsDeRafraichissment = rafraichissement.temps
-        Journaliseur.journaliserModificationDeLaConfiguration(
-            TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.tag,
-            "${TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.message}: ${rafraichissement.temps}"
-        )
-    }
-
-    fun leFichierExisteDansLeStockageExterne(cheminDuFichier: String): Boolean {
-        return File(context.getExternalFilesDir(title), cheminDuFichier).exists()
     }
 
     override fun sauvegarder(cheminDuFichier: CheminFichier) {

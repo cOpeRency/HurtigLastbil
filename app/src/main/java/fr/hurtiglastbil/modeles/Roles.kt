@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.enumerations
+package fr.hurtiglastbil.modeles
 
 enum class Roles(val motCle: String,val motsValides: Array<String>) {
     CAMIONNEUR("camionneur",arrayOf("CAMIONNEUR", "camionneur", "camionneuse", "CAMIONNEUSE")),
@@ -48,7 +48,7 @@ enum class Roles(val motCle: String,val motsValides: Array<String>) {
 
     companion object {
         fun obtenirRole(mot: String): Roles? {
-            for (role in Roles.values()) {
+            for (role in entries) {
                 for (motValide in role.motsValides) {
                     if (motValide.equals(mot, ignoreCase = true)) {
                         return role

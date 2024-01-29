@@ -1,8 +1,7 @@
 package fr.hurtiglastbil.modeles
 
-import fr.hurtiglastbil.enumerations.JsonEnum
-import fr.hurtiglastbil.enumerations.TagsErreur
-import fr.hurtiglastbil.enumerations.TagsModificationConfig
+import fr.hurtiglastbil.exceptions.TagsErreur
+import fr.hurtiglastbil.gestionnaires.TagsModificationConfig
 import fr.hurtiglastbil.interfaces.IListeBlanche
 import fr.hurtiglastbil.utilitaires.Journaliseur
 import org.json.JSONArray
@@ -56,20 +55,6 @@ class ListeBlanche : IListeBlanche {
             listeBlanche.remove(creerPersonneSiInseree(personne))
         } else {
             Journaliseur.journaliserErreur("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${personne.numeroDeTelephone}")
-        }
-    }
-
-    fun modifierPersonne(nouvellePersonne: Personne) {
-        if (estDansLaListeBlanche(Personne(numeroDeTelephone = nouvellePersonne.numeroDeTelephone))) {
-            val personne = listeBlanche.find { it == nouvellePersonne }!!
-            personne.nom = nouvellePersonne.nom
-            personne.role = nouvellePersonne.role
-            Journaliseur.journaliserModificationDeLaConfiguration(
-                TagsModificationConfig.PERSONNE_MODIFIE.tag,
-                TagsModificationConfig.PERSONNE_MODIFIE.message + ": ${personne.numeroDeTelephone}"
-            )
-        } else {
-            Journaliseur.journaliserErreur("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${nouvellePersonne.numeroDeTelephone}")
         }
     }
 
