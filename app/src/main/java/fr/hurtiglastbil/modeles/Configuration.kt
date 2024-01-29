@@ -2,9 +2,8 @@ package fr.hurtiglastbil.modeles
 
 import android.content.Context
 import android.util.Log
-import fr.hurtiglastbil.enumerations.JsonEnum
 import fr.hurtiglastbil.gestionnaires.updateGallery
-import fr.hurtiglastbil.enumerations.TagsModificationConfig
+import fr.hurtiglastbil.gestionnaires.TagsModificationConfig
 import fr.hurtiglastbil.interfaces.IConfiguration
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
 import fr.hurtiglastbil.utilitaires.Journaliseur
@@ -36,7 +35,8 @@ class Configuration(private val context: Context) : IConfiguration {
     private var utiliseStockageInterne : Boolean = true
 
     override fun configurationDepuisJSONObject(json: JSONObject): Configuration {
-        listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(JsonEnum.LISTE_BLANCHE.cle))
+        listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(
+            JsonEnum.LISTE_BLANCHE.cle))
         tempsDeRafraichissment = json.getInt(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle)
         typesDeTextos = ListeDesTypesDeTextos().creerDepuisJSONArray(json.getJSONArray(JsonEnum.TYPES_DE_TEXTO.cle))
 

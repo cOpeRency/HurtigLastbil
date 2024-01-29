@@ -10,7 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Telephony
 import android.util.Log
-import fr.hurtiglastbil.enumerations.TagsErreur
+import fr.hurtiglastbil.exceptions.TagsErreur
 import fr.hurtiglastbil.modeles.CheminFichier
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.EnregistrementFichierParams
@@ -96,7 +96,7 @@ private fun enregistrerLeFichier(params: EnregistrementFichierParams) {
         ),
         params.configuration.typesDeTextos!!
     )
-    val texteDansFichierDeLog: String = if (!(texto is TextoIndefini)) {
+    val texteDansFichierDeLog: String = if (texto !is TextoIndefini) {
         texto.enJson() + "\n"
     } else {
         "SMS reçu de ${params.expediteur.nom} avec le numéro ${params.expediteur.numeroDeTelephone} : \n${params.corpsDuMessage}"

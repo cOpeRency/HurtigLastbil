@@ -1,7 +1,7 @@
 package fr.hurtiglastbil.gestionnaires
 
 import android.util.Log
-import fr.hurtiglastbil.enumerations.Roles
+import fr.hurtiglastbil.modeles.Roles
 import fr.hurtiglastbil.modeles.CheminFichier
 import fr.hurtiglastbil.modeles.Configuration
 import fr.hurtiglastbil.modeles.Personne

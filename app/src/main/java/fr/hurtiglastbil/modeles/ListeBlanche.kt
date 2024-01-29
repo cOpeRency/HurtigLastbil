@@ -1,8 +1,7 @@
 package fr.hurtiglastbil.modeles
 
-import fr.hurtiglastbil.enumerations.JsonEnum
-import fr.hurtiglastbil.enumerations.TagsErreur
-import fr.hurtiglastbil.enumerations.TagsModificationConfig
+import fr.hurtiglastbil.exceptions.TagsErreur
+import fr.hurtiglastbil.gestionnaires.TagsModificationConfig
 import fr.hurtiglastbil.interfaces.IListeBlanche
 import fr.hurtiglastbil.utilitaires.Journaliseur
 import org.json.JSONArray

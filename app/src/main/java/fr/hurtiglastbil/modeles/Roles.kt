@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.enumerations
+package fr.hurtiglastbil.modeles
 
 enum class Roles(val motCle: String,val motsValides: Array<String>) {
     CAMIONNEUR("camionneur",arrayOf("CAMIONNEUR", "camionneur", "camionneuse", "CAMIONNEUSE")),

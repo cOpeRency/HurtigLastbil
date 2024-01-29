@@ -1,7 +1,6 @@
 package fr.hurtiglastbil.modeles
 
 import android.util.Log
-import fr.hurtiglastbil.enumerations.JsonEnum
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.assertj.core.api.Assertions.*

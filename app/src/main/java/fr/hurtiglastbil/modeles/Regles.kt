@@ -1,4 +1,4 @@
-package fr.hurtiglastbil.enumerations
+package fr.hurtiglastbil.modeles
 
 enum class Regles {
     TEL_FR {

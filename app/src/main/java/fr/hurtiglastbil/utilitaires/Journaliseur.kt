@@ -6,7 +6,7 @@ import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import fr.hurtiglastbil.enumerations.TagsErreur
+import fr.hurtiglastbil.exceptions.TagsErreur
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

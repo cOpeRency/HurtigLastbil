@@ -1,7 +1,7 @@
 package fr.hurtiglastbil.modeles.validateur
 
 import android.util.Log
-import fr.hurtiglastbil.enumerations.Regles
+import fr.hurtiglastbil.modeles.Regles
 
 abstract class Validateur {
     /**
