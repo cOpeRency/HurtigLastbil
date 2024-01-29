@@ -15,28 +15,28 @@ data class RoleInfo(val role: Role, val nom: Nom, val numeroDeTelephone: NumeroD
 
 data class TypeTextoInfo(val nomDuType: String, val motCles: List<String>)
 
-data class ConfigurationLine(val line: String, val configuration: Configuration)
+data class ConfigurationLigne(val line: String, val configuration: Configuration)
 
 fun actionsConfiguration(corpsDuMessage: String, configuration: Configuration) {
     corpsDuMessage.split("\n").filterNot { it.startsWith("CONFIG") || it.startsWith("=") }
-        .forEach { ligneConfiguration(ConfigurationLine(it, configuration)) }
+        .forEach { ligneConfiguration(ConfigurationLigne(it, configuration)) }
 
     configuration.sauvegarder(CheminFichier("configuration.dev.json", "config"))
 }
 
-private fun ligneConfiguration(configurationLine: ConfigurationLine) {
-    val words = configurationLine.line.split(" ")
+private fun ligneConfiguration(configurationLigne: ConfigurationLigne) {
+    val words = configurationLigne.line.split(" ")
     when (words[0].lowercase()) {
-        "ajouter" -> ajouter(configurationLine)
-        "modifier" -> modifier(configurationLine)
-        "supprimer" -> supprimer(configurationLine)
-        "réinitialiser" -> reinitialiser(configurationLine)
+        "ajouter" -> ajouter(configurationLigne)
+        "modifier" -> modifier(configurationLigne)
+        "supprimer" -> supprimer(configurationLigne)
+        "réinitialiser" -> reinitialiser(configurationLigne)
     }
 }
 
-private fun reinitialiser(configurationLine: ConfigurationLine) {
-    val mots = configurationLine.line.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
-    configurationLine.configuration.reinitialiser(
+private fun reinitialiser(configurationLigne: ConfigurationLigne) {
+    val mots = configurationLigne.line.split(" ").drop(1).joinToString(" ").split(",").map { it.trim() }
+    configurationLigne.configuration.reinitialiser(
         Personne(
             Role(mots[0]).value,
             Roles.ADMINISTRATEUR.motCle,
@@ -45,34 +45,34 @@ private fun reinitialiser(configurationLine: ConfigurationLine) {
     )
 }
 
-private fun ajouter(configurationLine: ConfigurationLine) {
-    val mots = configurationLine.line.split(" ")
+private fun ajouter(configurationLigne: ConfigurationLigne) {
+    val mots = configurationLigne.line.split(" ")
     when {
         Roles.estUnRole(mots[1].lowercase()) -> {
-            val roleInfo = parseRoleInfo(configurationLine.line)
-            ajouterPersonneALaListeBlanche(configurationLine.configuration, roleInfo)
+            val roleInfo = parseRoleInfo(configurationLigne.line)
+            ajouterPersonneALaListeBlanche(configurationLigne.configuration, roleInfo)
         }
         mots[1].lowercase() == "type" -> {
-            val typeTextoInfo = parseTypeTextoInfo(configurationLine.line)
-            ajouterTypeDeTexto(configurationLine.configuration, typeTextoInfo)
+            val typeTextoInfo = parseTypeTextoInfo(configurationLigne.line)
+            ajouterTypeDeTexto(configurationLigne.configuration, typeTextoInfo)
         }
         (mots[1].lowercase() + mots[2].lowercase()) == "motsclé" -> {
-            val motsCleInfo = parseTypeTextoInfo(configurationLine.line)
-            ajouterMotsCle(configurationLine.configuration, motsCleInfo)
+            val motsCleInfo = parseTypeTextoInfo(configurationLigne.line)
+            ajouterMotsCle(configurationLigne.configuration, motsCleInfo)
         }
     }
 }
 
-private fun parseRoleInfo(line: String): RoleInfo {
-    val role = Role(line.split(" ")[1].lowercase())
-    val donneesPersonne = line.split(" : ")[1]
+private fun parseRoleInfo(ligne: String): RoleInfo {
+    val role = Role(ligne.split(" ")[1].lowercase())
+    val donneesPersonne = ligne.split(" : ")[1]
     val nom = Nom(donneesPersonne.split(",")[0])
     val numeroDeTelephone = NumeroDeTelephone(donneesPersonne.split(",")[1].split(" ").joinToString(""))
     return RoleInfo(role, nom, numeroDeTelephone)
 }
 
-private fun parseTypeTextoInfo(line: String): TypeTextoInfo {
-    val extraitDeLigne = line.split(" : ")
+private fun parseTypeTextoInfo(ligne: String): TypeTextoInfo {
+    val extraitDeLigne = ligne.split(" : ")
     val nomDuType = extraitDeLigne[1]
     val motCles = extraitDeLigne[2].split(",").onEach { it.trim() }
     return TypeTextoInfo(nomDuType, motCles)
@@ -99,26 +99,26 @@ fun ajouterTypeDeTexto(configuration: Configuration, typeTextoInfo: TypeTextoInf
     configuration.typesDeTextos!!.ajouterTypeTexto(TypeTexto(typeTextoInfo.nomDuType, typeTextoInfo.motCles.toMutableSet()))
 }
 
-private fun modifier(configurationLine: ConfigurationLine) {
-    val mots = configurationLine.line.split(" ")
+private fun modifier(configurationLigne: ConfigurationLigne) {
+    val mots = configurationLigne.line.split(" ")
     if (Roles.estUnRole(mots[1].lowercase())) {
         val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
-        val partiePersonne = configurationLine.line.split(" : ")[1]
+        val partiePersonne = configurationLigne.line.split(" : ")[1]
         val personne = Personne(
             partiePersonne.split(",")[0],
             role,
             partiePersonne.split(",")[1].split(" ").joinToString("")
         )
-        supprimerPersonne(personne.role!!, personne.nom, personne.numeroDeTelephone, configurationLine.configuration)
-        ajouterPersonneALaListeBlanche(configurationLine.configuration, RoleInfo(Role(role), Nom(personne.nom!!), NumeroDeTelephone(personne.numeroDeTelephone)))
+        supprimerPersonne(personne.role!!, personne.nom, personne.numeroDeTelephone, configurationLigne.configuration)
+        ajouterPersonneALaListeBlanche(configurationLigne.configuration, RoleInfo(Role(role), Nom(personne.nom!!), NumeroDeTelephone(personne.numeroDeTelephone)))
     }
 }
 
-private fun supprimer(configurationLine: ConfigurationLine) {
-    val mots = configurationLine.line.split(" ")
+private fun supprimer(configurationLigne: ConfigurationLigne) {
+    val mots = configurationLigne.line.split(" ")
     if (Roles.estUnRole(mots[1].lowercase())) {
         val role = Roles.obtenirRole(mots[1].lowercase())!!.motCle
-        val donneesPersonne = configurationLine.line.split(" : ")[1]
+        val donneesPersonne = configurationLigne.line.split(" : ")[1]
         var nom: String? = null
         val numeroDeTelephone: String
         if (donneesPersonne.split(",").size == 2) {
@@ -127,21 +127,21 @@ private fun supprimer(configurationLine: ConfigurationLine) {
         } else {
             numeroDeTelephone = donneesPersonne.split(" ").joinToString("")
         }
-        supprimerPersonne(role, nom, numeroDeTelephone, configurationLine.configuration)
+        supprimerPersonne(role, nom, numeroDeTelephone, configurationLigne.configuration)
     } else if (mots[1].lowercase() == "type") {
-        supprimerTypeTexto(configurationLine)
+        supprimerTypeTexto(configurationLigne)
     } else if (mots[1].lowercase() + mots[2].lowercase() == "motsclés") {
-        val extraitDeLigne = configurationLine.line.split(" : ")
+        val extraitDeLigne = configurationLigne.line.split(" : ")
         val motsCles = extraitDeLigne[2].split(",").onEach { it.trim() }
         for (motCle in motsCles) {
-            configurationLine.configuration.typesDeTextos!!.supprimerMotCle(extraitDeLigne[1], motCle)
+            configurationLigne.configuration.typesDeTextos!!.supprimerMotCle(extraitDeLigne[1], motCle)
         }
     }
 }
 
-private fun supprimerTypeTexto(configurationLine: ConfigurationLine) {
-    val extraitDeLigne = configurationLine.line.split(" : ")
-    configurationLine.configuration.typesDeTextos!!.supprimerTypeTexto(extraitDeLigne[1])
+private fun supprimerTypeTexto(configurationLigne: ConfigurationLigne) {
+    val extraitDeLigne = configurationLigne.line.split(" : ")
+    configurationLigne.configuration.typesDeTextos!!.supprimerTypeTexto(extraitDeLigne[1])
 }
 
 private fun supprimerPersonne(role: String, nom: String?, numeroDeTelephone: String, configuration: Configuration) {

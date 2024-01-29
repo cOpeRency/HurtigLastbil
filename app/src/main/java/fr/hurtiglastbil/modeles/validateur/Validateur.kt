@@ -15,7 +15,7 @@ abstract class Validateur {
      * @param nomChamp Le nom du champ dont on veut la valeur
      * @return La valeur du champ nommé nomChamp
      */
-    abstract fun getValeurChamp(nomChamp: String): String?
+    abstract fun recupereValeurChamp(nomChamp: String): String?
 
     /**
      * Valide les champs de l'objet
@@ -25,7 +25,7 @@ abstract class Validateur {
     open fun valider() : Boolean {
         for ((regle, champs) in regles) {
             for (champ in champs) {
-                val valeurChamp = getValeurChamp(champ)
+                val valeurChamp = recupereValeurChamp(champ)
                 if (!regle.valider(valeurChamp)) {
                     Log.d("Tests", "Valeur du champ $champ: $valeurChamp ")
                     return false

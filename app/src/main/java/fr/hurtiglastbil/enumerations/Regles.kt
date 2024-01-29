@@ -8,7 +8,7 @@ enum class Regles {
     },
     NOM_PERSONNE {
         override fun valider(chaine: String?): Boolean {
-            return PAS_VIDE_OU_NULL.valider(chaine) && CHARACTERES_AUTORISES.valider(chaine) && chaine!!.length > 2
+            return PAS_VIDE_OU_NULL.valider(chaine) && CARACTERES_AUTORISES.valider(chaine) && chaine!!.length > 2
         }
     },
     ROLE_PERSONNE {
@@ -26,7 +26,7 @@ enum class Regles {
             return !chaine.isNullOrEmpty()
         }
     },
-    CHARACTERES_AUTORISES {
+    CARACTERES_AUTORISES {
         override fun valider(chaine: String?): Boolean {
             // Valide les caractères suivants : a-z, A-Z, -, espace
             return chaine?.matches(Regex("^[a-zA-ZÀ-ÖØ-öø-ÿ\\- ]+\$"))!!

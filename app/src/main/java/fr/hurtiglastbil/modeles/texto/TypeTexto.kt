@@ -28,7 +28,7 @@ data class TypeTexto(val cle: String, val listeDeMotsCles: MutableSet<String>) :
         Regles.PAS_VIDE_OU_NULL to arrayListOf(TypeTexto::cle.name, TypeTexto::listeDeMotsCles.name),
     )
 
-    override fun getValeurChamp(nomChamp: String): String? {
+    override fun recupereValeurChamp(nomChamp: String): String? {
         return when (nomChamp) {
             TypeTexto::cle.name -> cle
             TypeTexto::listeDeMotsCles.name -> listeDeMotsCles.joinToString { it }

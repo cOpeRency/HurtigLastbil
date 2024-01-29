@@ -44,10 +44,10 @@ class TestTypeTexto {
     @Test
     fun versJSONRetourneLeBonFormat() {
         val json = typeTexto.versJSON()
-        val jsonArray = json.getJSONArray("cleTest")
+        val tableauJson = json.getJSONArray("cleTest")
 
-        assertEquals(2, jsonArray.length())
-        assertTrue(jsonArray.getString(0) == "motCle1" || jsonArray.getString(1) == "motCle1")
+        assertEquals(2, tableauJson.length())
+        assertTrue(tableauJson.getString(0) == "motCle1" || tableauJson.getString(1) == "motCle1")
     }
 
     @Test

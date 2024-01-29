@@ -29,14 +29,12 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
     config.configurationDepuisStockageExterne(CheminFichier("configuration.dev.json", "config"))
 
     if (action?.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
-        // Log an error
         Log.e(TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.tag, TagsErreur.ERREUR_ECOUTE_PAS_TEXTO.message)
         return
     }
 
     val message = Telephony.Sms.Intents.getMessagesFromIntent(action)
     if (message.isNullOrEmpty()) {
-        // Log an error
         Log.e("TEXT_RECEIVER", "No SMS message found in the Intent")
         return
     }
@@ -46,20 +44,20 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
     val horodatage = System.currentTimeMillis()
 
     val personne = Personne(numeroDeTelephone = expediteur)
-    val isInWhitelist = config.listeBlanche?.estDansLaListeBlanche(personne) == true
-    if (isInWhitelist) {
-        val personneInList = config.listeBlanche?.creerPersonneSiInseree(personne)
-        val isAdmin = personneInList?.role == "administrateur"
-        val startsWithConfig = corpsDuMessage.startsWith("config", ignoreCase = true) || corpsDuMessage.startsWith("configuration", ignoreCase = true)
+    val estDansLaListeBlanche = config.listeBlanche?.estDansLaListeBlanche(personne) == true
+    if (estDansLaListeBlanche) {
+        val personneDansLaListe = config.listeBlanche?.creerPersonneSiInseree(personne)
+        val estAdmin = personneDansLaListe?.role == "administrateur"
+        val demarreAvecLaConfig = corpsDuMessage.startsWith("config", ignoreCase = true) || corpsDuMessage.startsWith("configuration", ignoreCase = true)
 
-        if (isAdmin && startsWithConfig) {
+        if (estAdmin && demarreAvecLaConfig) {
             actionsConfiguration(corpsDuMessage, config)
         }
 
         Log.d("TEXT_RECEIVER", "Texto reçu de $expediteur  : $corpsDuMessage")
         Log.d("WHITELIST", "traiterTexto: $expediteur est dans la liste blanche")
 
-        personneInList?.let {
+        personneDansLaListe?.let {
             val params = EnregistrementFichierParams(contexte, it, horodatage, corpsDuMessage, config)
             enregistrerLeFichier(params)
         }
@@ -70,13 +68,13 @@ fun traiterTexto(contexte: Context?, action: Intent?) {
 
 
 private fun enregistrerLeFichier(params: EnregistrementFichierParams) {
-    val subDirBase = "textos"
+    val baseDuSousDossier = "textos"
     val typeDuTexto = params.configuration.typesDeTextos!!.recupererTypeTextoDepuisCorpsMessage(params.corpsDuMessage!!)
     Log.d("Tests", "enregistrerLeFichier: $typeDuTexto")
-    val subDir: String = if (typeDuTexto != null) {
-        "$subDirBase/${typeDuTexto.cle.split(" ").joinToString("/")}"
+    val sousDossier: String = if (typeDuTexto != null) {
+        "$baseDuSousDossier/${typeDuTexto.cle.split(" ").joinToString("/")}"
     } else {
-        "$subDirBase/indéfini"
+        "$baseDuSousDossier/indéfini"
     }
     val fichier = File(params.contexte.getExternalFilesDir("hurtiglastbil"), "${params.expediteur.nom}_${params.expediteur.numeroDeTelephone}_${params.horodatage}.log.txt")
     if (!fichier.exists()) {
@@ -102,41 +100,38 @@ private fun enregistrerLeFichier(params: EnregistrementFichierParams) {
         "SMS reçu de ${params.expediteur.nom} avec le numéro ${params.expediteur.numeroDeTelephone} : \n${params.corpsDuMessage}"
     }
 
-    // Contenu à écrire dans le fichier
     Log.d("Récepteur de Texto", params.contexte.getExternalFilesDir("hurtiglastbil").toString())
     Log.d("Récepteur de Texto", fichier.readText())
     try {
         val fluxDeFichierSortant = FileOutputStream(
             fichier,
             true
-        ) // true pour ajouter au fichier existant
+        )
 
         fluxDeFichierSortant.write(texteDansFichierDeLog.toByteArray())
         fluxDeFichierSortant.close()
     } catch (e: IOException) {
         Log.e(TagsErreur.ERREUR_MODIFICATION_FICHIER.tag, TagsErreur.ERREUR_MODIFICATION_FICHIER.message + " de stockage de SMS." )
     }
-    updateGallery(params.contexte, fichier, subDir)
+    miseAJourGallerie(params.contexte, fichier, sousDossier)
 }
 
-fun updateGallery(context: Context, file: File, subDir: String? = null) {
-    val resolver: ContentResolver = context.contentResolver
-    val contentValues = ContentValues()
-    contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
-    val cheminComplet = if (subDir != null) "/hurtiglastbil/$subDir" else "/hurtiglastbil"
-    contentValues.put(
+fun miseAJourGallerie(contexte: Context, fichier: File, sousDossier: String? = null) {
+    val resolveur: ContentResolver = contexte.contentResolver
+    val valeursDeContenue = ContentValues()
+    valeursDeContenue.put(MediaStore.Images.Media.DISPLAY_NAME, fichier.name)
+    val cheminComplet = if (sousDossier != null) "/hurtiglastbil/$sousDossier" else "/hurtiglastbil"
+    valeursDeContenue.put(
         MediaStore.Images.Media.RELATIVE_PATH,
         Environment.DIRECTORY_DOCUMENTS + cheminComplet
     )
-
-    // Exécution de la requête
-    val cursor = executerRequete(resolver,file,cheminComplet)
+    val curseur = executerRequete(resolveur,fichier,cheminComplet)
 
     var uri: Uri = MediaStore.Files.getContentUri("external")
-    if (cursor != null && cursor.moveToFirst()) { //Si fichier existe déjà, on le suppr
-        val existingUri = ContentUris.withAppendedId(uri, cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)?:0))
-        resolver.delete(existingUri, null, null)
+    if (curseur != null && curseur.moveToFirst()) { 
+        val uriExistante = ContentUris.withAppendedId(uri, curseur.getLong(curseur.getColumnIndex(MediaStore.Images.Media._ID)?:0))
+        resolveur.delete(uriExistante, null, null)
     }
-    sauvegarderFichier(resolver,file,uri,contentValues)
-    cursor?.close()
+    sauvegarderFichier(resolveur,fichier,uri,valeursDeContenue)
+    curseur?.close()
 }

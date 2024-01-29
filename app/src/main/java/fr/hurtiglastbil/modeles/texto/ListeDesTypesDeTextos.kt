@@ -9,16 +9,16 @@ import fr.hurtiglastbil.exceptions.ExceptionSuppressionTypeTexto
 import org.json.JSONArray
 
 class ListeDesTypesDeTextos(var typeTextos: MutableSet<TypeTexto>? = null) {
-    fun creerDepuisJSONArray(jsonArray: JSONArray) : ListeDesTypesDeTextos {
+    fun creerDepuisJSONArray(tableauJson: JSONArray) : ListeDesTypesDeTextos {
         typeTextos = mutableSetOf()
-        for (i in 0 until jsonArray.length()) {
-            val motCle = jsonArray.getJSONObject(i)
+        for (i in 0 until tableauJson.length()) {
+            val motCle = tableauJson.getJSONObject(i)
             val cles = motCle.keys()
             for (cle in cles) {
-                val motsClesArray = motCle.getJSONArray(cle)
+                val tableauMotsCles = motCle.getJSONArray(cle)
                 val listeDeMotsCles = mutableSetOf<String>()
-                for (j in 0 until motsClesArray.length()) {
-                    listeDeMotsCles.add(motsClesArray.getString(j))
+                for (j in 0 until tableauMotsCles.length()) {
+                    listeDeMotsCles.add(tableauMotsCles.getString(j))
                 }
                 typeTextos!!.add(TypeTexto(cle, listeDeMotsCles))
             }
@@ -45,13 +45,13 @@ class ListeDesTypesDeTextos(var typeTextos: MutableSet<TypeTexto>? = null) {
         }
     }
 
-    fun listeDeMotsClesVersJSONArray(): JSONArray {
+    fun listeDeMotsClesVersTableauJSON(): JSONArray {
         if (typeTextos == null) {
             return JSONArray()
         }
-        val jsonArray = JSONArray()
-        typeTextos!!.forEach { jsonArray.put(it.versJSON()) }
-        return jsonArray
+        val tableauJson = JSONArray()
+        typeTextos!!.forEach { tableauJson.put(it.versJSON()) }
+        return tableauJson
     }
 
     fun recupererTypeTextoDepuisCorpsMessage(corpsMessage: String): TypeTexto? {

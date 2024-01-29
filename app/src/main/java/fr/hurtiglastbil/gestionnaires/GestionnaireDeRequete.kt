@@ -11,31 +11,28 @@ import java.io.FileInputStream
 import java.io.IOException
 
 
-fun executerRequete(resolver: ContentResolver, file: File, cheminComplet: String): Cursor? {
-    // Récupère l'uri du stockage externe
-    val queryUri = MediaStore.Files.getContentUri("external")
-    // Récupère les colonnes à retourner
+fun executerRequete(resolveur: ContentResolver, fichier: File, cheminComplet: String): Cursor? {
+    val requeteUri = MediaStore.Files.getContentUri("external")
     val projection = arrayOf(MediaStore.Images.Media._ID)
-    // Condition sur la selection (WHERE)
     val selection = "${MediaStore.Images.Media.RELATIVE_PATH}=? AND ${MediaStore.Images.Media.DISPLAY_NAME}=?"
     val selectionArgs = arrayOf(
         Environment.DIRECTORY_DOCUMENTS + cheminComplet + "/",
-        file.name
+        fichier.name
     )
 
-    return resolver.query(queryUri, projection, selection, selectionArgs, null)
+    return resolveur.query(requeteUri, projection, selection, selectionArgs, null)
 }
 
-fun sauvegarderFichier(resolver: ContentResolver, file: File, uri : Uri, contentValues : ContentValues){
-    val uri = resolver.insert(uri, contentValues)
+fun sauvegarderFichier(resolveur: ContentResolver, fichier: File, uri : Uri, valeursDeContenue : ContentValues){
+    val uri = resolveur.insert(uri, valeursDeContenue)
 
     try {
-        resolver.openOutputStream(uri!!)?.use { outputStream ->
-            FileInputStream(file).use { fileInputStream ->
-                val buffer = ByteArray(1024)
-                var bytesRead: Int
-                while (fileInputStream.read(buffer).also { bytesRead = it } != -1) {
-                    outputStream.write(buffer, 0, bytesRead)
+        resolveur.openOutputStream(uri!!)?.use { outputStream ->
+            FileInputStream(fichier).use { fileInputStream ->
+                val tampon = ByteArray(1024)
+                var lectureOctets: Int
+                while (fileInputStream.read(tampon).also { lectureOctets = it } != -1) {
+                    outputStream.write(tampon, 0, lectureOctets)
                 }
             }
         }

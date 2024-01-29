@@ -10,14 +10,14 @@ interface IConfiguration {
      *
      * @param[json] Le fichier de configuration
      */
-    fun configurationDepuisJSONObject(json: JSONObject): IConfiguration
+    fun configurationDepuisObjetJSON(json: JSONObject): IConfiguration
 
     /**
      * Donne le fichier de configuration au format JSONObject
      *
      * @return Le fichier de configuration
      */
-    fun configurationVersJSONObject(): JSONObject
+    fun configurationVersObjetJSON(): JSONObject
 
     /**
      * Défini le fichier de configuration depuis une chaîne de caractères (écrit au format json)

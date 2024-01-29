@@ -29,8 +29,8 @@ class ListeBlanche : IListeBlanche {
 
     override fun creerListeBlancheDepuisUneChaineDeCharacteres(listeBlanche: String) : ListeBlanche
     {
-        val jsonArray = JSONArray(listeBlanche)
-        return creerUneListeBlancheDepuisTableauDeJSon(jsonArray)
+        val tableauJson = JSONArray(listeBlanche)
+        return creerUneListeBlancheDepuisTableauDeJSon(tableauJson)
     }
 
     override fun estDansLaListeBlanche(personne: Personne): Boolean {
@@ -88,7 +88,7 @@ class ListeBlanche : IListeBlanche {
         }
     }
 
-    override fun listeBlancheVersJSONArray(): JSONArray {
+    override fun listeBlancheVersTableauJSON(): JSONArray {
         val jsonArray = JSONArray()
         listeBlanche.forEach {
             jsonArray.put(it.versJSON())

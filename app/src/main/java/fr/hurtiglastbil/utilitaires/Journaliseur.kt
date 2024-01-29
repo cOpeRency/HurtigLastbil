@@ -62,19 +62,19 @@ object Journaliseur {
         return dateFormat.format(date)
     }
 
-    private fun sauvegarderDansDocuments(context: Context, file: File, chemin: String) {
-        val resolver: ContentResolver = context.contentResolver
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
-        contentValues.put(MediaStore.Images.Media.MIME_TYPE, "text/plain")
-        contentValues.put(
+    private fun sauvegarderDansDocuments(contexte: Context, fichier: File, chemin: String) {
+        val resolveur: ContentResolver = contexte.contentResolver
+        val valeurDeContenu = ContentValues()
+        valeurDeContenu.put(MediaStore.Images.Media.DISPLAY_NAME, fichier.name)
+        valeurDeContenu.put(MediaStore.Images.Media.MIME_TYPE, "text/plain")
+        valeurDeContenu.put(
             MediaStore.Images.Media.RELATIVE_PATH,
             Environment.DIRECTORY_DOCUMENTS + "/hurtiglastbil/logs/" + chemin
         )
-        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+        val uri = resolveur.insert(MediaStore.Files.getContentUri("external"), valeurDeContenu)
         try {
-            resolver.openOutputStream(uri!!)?.use { outputStream ->
-                FileInputStream(file).use { fileInputStream ->
+            resolveur.openOutputStream(uri!!)?.use { outputStream ->
+                FileInputStream(fichier).use { fileInputStream ->
                     val buffer = ByteArray(1024)
                     var bytesRead: Int
                     while (fileInputStream.read(buffer).also { bytesRead = it } != -1) {

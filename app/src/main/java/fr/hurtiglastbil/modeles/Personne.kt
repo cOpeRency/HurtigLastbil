@@ -18,7 +18,7 @@ data class Personne(
         Regles.TEL_FR to arrayListOf(Personne::numeroDeTelephone.name),
     )
 
-    override fun getValeurChamp(nomChamp: String): String? {
+    override fun recupereValeurChamp(nomChamp: String): String? {
         return when (nomChamp) {
             Personne::nom.name -> nom
             Personne::role.name -> role
@@ -31,17 +31,17 @@ data class Personne(
         if (this === other) return true
         if (other !is Personne) return false
 
-        val normalizedThisNumber = normalizePhoneNumber(numeroDeTelephone)
-        val normalizedOtherNumber = normalizePhoneNumber(other.numeroDeTelephone)
+        val normalizedThisNumber = normaliseNumeroTelephone(numeroDeTelephone)
+        val normalizedOtherNumber = normaliseNumeroTelephone(other.numeroDeTelephone)
 
         return normalizedThisNumber == normalizedOtherNumber
     }
 
-    private fun normalizePhoneNumber(phoneNumber: String): String {
+    private fun normaliseNumeroTelephone(numeroDeTelephone: String): String {
         return when {
-            phoneNumber.startsWith("0") -> phoneNumber.substring(1)
-            phoneNumber.startsWith("+33") -> phoneNumber.substring(3)
-            else -> phoneNumber
+            numeroDeTelephone.startsWith("0") -> numeroDeTelephone.substring(1)
+            numeroDeTelephone.startsWith("+33") -> numeroDeTelephone.substring(3)
+            else -> numeroDeTelephone
         }
     }
 

@@ -17,10 +17,8 @@ class ActivitePrincipale : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Masquer la barre d'action
         supportActionBar?.hide()
 
-        // Masquer la barre de statut
         window.decorView.alpha = 0f
 
         window.insetsController?.hide(WindowInsets.Type.statusBars())

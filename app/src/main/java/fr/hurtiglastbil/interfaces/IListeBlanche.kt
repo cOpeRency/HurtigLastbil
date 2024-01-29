@@ -44,5 +44,5 @@ interface IListeBlanche {
      *
      * @return La liste blanche
      */
-    fun listeBlancheVersJSONArray(): JSONArray
+    fun listeBlancheVersTableauJSON(): JSONArray
 }

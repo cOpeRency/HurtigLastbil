@@ -12,8 +12,8 @@ abstract class Texto(
     val contenu: String)
 {
     fun enJson(): String {
-        val smsData = DonneesTexto(envoyeur, receveur, date, contenu)
+        val donneesSMS = DonneesTexto(envoyeur, receveur, date, contenu)
         val json = Json { serializersModule = serializersModuleOf(Date::class, SerialiseurDeDate); prettyPrint = true }
-        return json.encodeToString(smsData)
+        return json.encodeToString(donneesSMS)
     }
 }
