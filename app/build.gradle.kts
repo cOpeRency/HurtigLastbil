@@ -67,7 +67,7 @@ sonar {
         property("sonar.projectName", "HurtigLastbil")
         property("sonar.projectKey", "HurtigLastbil")
         property("sonar.host.url", "http://localhost:9000")
-        property("sonar.token", "sqp_dc869d0b3da5b1ef333c636b5550a11d7a71f941")
+        property("sonar.token", project.findProperty("sonarToken") as String? ?: "")
         property("sonar.gradle.skipCompile", "true")
     }
 }

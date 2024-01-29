@@ -1,7 +1,7 @@
 package fr.hurtiglastbil.modeles.texto
 
 import android.util.Log
-import fr.hurtiglastbil.enumerations.TagsErreur
+import fr.hurtiglastbil.exceptions.TagsErreur
 import fr.hurtiglastbil.exceptions.ExceptionNouveauMotCle
 import fr.hurtiglastbil.exceptions.ExceptionNouveauTypeTexto
 import fr.hurtiglastbil.exceptions.ExceptionSuppressionMotCle
