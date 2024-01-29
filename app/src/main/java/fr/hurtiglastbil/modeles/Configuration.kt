@@ -3,10 +3,8 @@ package fr.hurtiglastbil.modeles
 import android.content.Context
 import android.util.Log
 import fr.hurtiglastbil.gestionnaires.updateGallery
-import fr.hurtiglastbil.gestionnaires.TagsModificationConfig
 import fr.hurtiglastbil.interfaces.IConfiguration
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
-import fr.hurtiglastbil.utilitaires.Journaliseur
 import org.json.JSONObject
 import java.io.File
 import java.io.InputStream
