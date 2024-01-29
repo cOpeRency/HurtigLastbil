@@ -75,18 +75,6 @@ class Configuration(private val context: Context) : IConfiguration {
         return File(context.applicationContext.filesDir, cheminDuFichier).exists()
     }
 
-    fun modifierTempsDeRafraichissement(rafraichissement: Rafraichissement) {
-        this.tempsDeRafraichissment = rafraichissement.temps
-        Journaliseur.journaliserModificationDeLaConfiguration(
-            TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.tag,
-            "${TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.message}: ${rafraichissement.temps}"
-        )
-    }
-
-    fun leFichierExisteDansLeStockageExterne(cheminDuFichier: String): Boolean {
-        return File(context.getExternalFilesDir(title), cheminDuFichier).exists()
-    }
-
     override fun sauvegarder(cheminDuFichier: CheminFichier) {
         val cheminComplet = if (cheminDuFichier.subDir != null) "${cheminDuFichier.subDir}/${cheminDuFichier.cheminDuFichier}" else cheminDuFichier.cheminDuFichier
         if (utiliseStockageInterne) {
