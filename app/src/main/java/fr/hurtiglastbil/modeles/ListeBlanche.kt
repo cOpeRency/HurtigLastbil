@@ -58,20 +58,6 @@ class ListeBlanche : IListeBlanche {
         }
     }
 
-    fun modifierPersonne(nouvellePersonne: Personne) {
-        if (estDansLaListeBlanche(Personne(numeroDeTelephone = nouvellePersonne.numeroDeTelephone))) {
-            val personne = listeBlanche.find { it == nouvellePersonne }!!
-            personne.nom = nouvellePersonne.nom
-            personne.role = nouvellePersonne.role
-            Journaliseur.journaliserModificationDeLaConfiguration(
-                TagsModificationConfig.PERSONNE_MODIFIE.tag,
-                TagsModificationConfig.PERSONNE_MODIFIE.message + ": ${personne.numeroDeTelephone}"
-            )
-        } else {
-            Journaliseur.journaliserErreur("Personne n'existe pas", "La personne avec le numéro suivant n'existe pas dans la liste blanche: ${nouvellePersonne.numeroDeTelephone}")
-        }
-    }
-
     override fun insererPersonne(personne: Personne) {
         if (!estDansLaListeBlanche(personne)) {
             if (personne.valider()) {
