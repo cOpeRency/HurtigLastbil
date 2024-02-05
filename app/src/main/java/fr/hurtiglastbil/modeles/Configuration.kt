@@ -69,10 +69,6 @@ class Configuration(private val context: Context) : IConfiguration {
         this.listeBlanche!!.insererPersonne(personne)
     }
 
-    override fun leFichierExisteDansLeStockageInterne(cheminDuFichier: String): Boolean {
-        return File(context.applicationContext.filesDir, cheminDuFichier).exists()
-    }
-
     override fun sauvegarder(cheminDuFichier: CheminFichier) {
         val cheminComplet = if (cheminDuFichier.subDir != null) "${cheminDuFichier.subDir}/${cheminDuFichier.cheminDuFichier}" else cheminDuFichier.cheminDuFichier
         if (utiliseStockageInterne) {
@@ -118,10 +114,6 @@ class Configuration(private val context: Context) : IConfiguration {
         val config = configurationDepuisAssets(cheminFichier.cheminDuFichier)
         config.sauvegarder(cheminFichier)
         return this
-    }
-
-    override fun configurationDepuisFichierInterne(cheminDuFichier: CheminFichier): Configuration {
-        return loadConfigurationFromStorage(cheminDuFichier, true)
     }
 
     override fun configurationDepuisStockageExterne(cheminDuFichier: CheminFichier): Configuration {
