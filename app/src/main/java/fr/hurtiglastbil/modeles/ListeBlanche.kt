@@ -26,12 +26,6 @@ class ListeBlanche : IListeBlanche {
         return this
     }
 
-    override fun creerListeBlancheDepuisUneChaineDeCharacteres(listeBlanche: String) : ListeBlanche
-    {
-        val jsonArray = JSONArray(listeBlanche)
-        return creerUneListeBlancheDepuisTableauDeJSon(jsonArray)
-    }
-
     override fun estDansLaListeBlanche(personne: Personne): Boolean {
         for (personneDansLaListe in listeBlanche) {
             if (personneDansLaListe == personne) {
