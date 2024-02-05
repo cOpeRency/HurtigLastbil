@@ -12,13 +12,6 @@ interface IListeBlanche {
     fun creerUneListeBlancheDepuisTableauDeJSon(listeBlanche: JSONArray) : IListeBlanche
 
     /**
-     * Défini la liste blanche depuis une chaîne de caractères
-     *
-     * @param[listeBlanche] La liste blanche
-     */
-    fun creerListeBlancheDepuisUneChaineDeCharacteres(listeBlanche: String) : IListeBlanche
-
-    /**
      * Vérfie l'existance d'une personne dans la liste
      *
      * @param[personne] La personne à vérifier
