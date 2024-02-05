@@ -33,7 +33,6 @@ interface IConfiguration {
      */
     fun configurationVersJSON(): String
 
-
     /**
      * Défini le fichier de configuration depuis un fichier mis dans les assets
      *
@@ -49,28 +48,11 @@ interface IConfiguration {
     fun sauvegarder(cheminDuFichier: CheminFichier)
 
     /**
-     * Vérifie l'existance du fichier de configuration
-     *
-     * @param[cheminDuFichier] Le chemin vers le fichier
-     * @return true si le fichier existe, false sinon
-     */
-    fun leFichierExisteDansLeStockageInterne(cheminDuFichier: String): Boolean
-
-    /**
-     * Défini le fichier de configuration depuis un fichier interne
-     *
-     * @param[cheminDuFichier] Le chemin vers le fichier
-     */
-    fun configurationDepuisFichierInterne(cheminDuFichier: CheminFichier): IConfiguration
-
-    /**
      * Défini le fichier de configuration depuis un fichier externe
      *
      * @param[cheminDuFichier] Le chemin vers le fichier
      */
     fun configurationDepuisStockageExterne(cheminDuFichier: CheminFichier): IConfiguration
-
-
 
     /**
      * Insère une nouvelle personne dans la liste blanche

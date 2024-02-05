@@ -2,19 +2,16 @@ package fr.hurtiglastbil.modeles
 
 import android.content.Context
 import android.util.Log
-import fr.hurtiglastbil.enumerations.JsonEnum
-import fr.hurtiglastbil.gestionnaires.miseAJourGallerie
-import fr.hurtiglastbil.enumerations.TagsModificationConfig
+import fr.hurtiglastbil.gestionnaires.updateGallery
 import fr.hurtiglastbil.interfaces.IConfiguration
 import fr.hurtiglastbil.modeles.texto.ListeDesTypesDeTextos
-import fr.hurtiglastbil.utilitaires.Journaliseur
 import org.json.JSONObject
 import java.io.File
 import java.io.InputStream
 
 private const val title = "hurtiglastbil"
 
-class Configuration(private val contexte: Context) : IConfiguration {
+class Configuration(private val context: Context) : IConfiguration {
     /**
      * Liste blanche des numéros de téléphone autorisés
      */
@@ -35,74 +32,59 @@ class Configuration(private val contexte: Context) : IConfiguration {
      */
     private var utiliseStockageInterne : Boolean = true
 
-    override fun configurationDepuisObjetJSON(json: JSONObject): Configuration {
-        listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(JsonEnum.LISTE_BLANCHE.cle))
+    override fun configurationDepuisJSONObject(json: JSONObject): Configuration {
+        listeBlanche = ListeBlanche().creerUneListeBlancheDepuisTableauDeJSon(json.getJSONArray(
+            JsonEnum.LISTE_BLANCHE.cle))
         tempsDeRafraichissment = json.getInt(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle)
         typesDeTextos = ListeDesTypesDeTextos().creerDepuisJSONArray(json.getJSONArray(JsonEnum.TYPES_DE_TEXTO.cle))
 
         return this
     }
 
-    override fun configurationVersObjetJSON(): JSONObject {
+    override fun configurationVersJSONObject(): JSONObject {
         val json = JSONObject()
-        json.put(JsonEnum.LISTE_BLANCHE.cle, listeBlanche!!.listeBlancheVersTableauJSON())
+        json.put(JsonEnum.LISTE_BLANCHE.cle, listeBlanche!!.listeBlancheVersJSONArray())
         json.put(JsonEnum.DELAI_DE_RAFRAICHISSEMENT.cle, tempsDeRafraichissment)
-        json.put(JsonEnum.TYPES_DE_TEXTO.cle, typesDeTextos!!.listeDeMotsClesVersTableauJSON())
+        json.put(JsonEnum.TYPES_DE_TEXTO.cle, typesDeTextos!!.listeDeMotsClesVersJSONArray())
         return json
     }
 
     override fun configurationDepuisJSON(json: String): Configuration {
-        val objetJson = JSONObject(json)
-        return configurationDepuisObjetJSON(objetJson)
+        val jsonObject = JSONObject(json)
+        return configurationDepuisJSONObject(jsonObject)
     }
 
     override fun configurationVersJSON(): String {
-        val json = configurationVersObjetJSON()
+        val json = configurationVersJSONObject()
         return json.toString(4)
     }
 
     override fun configurationDepuisAssets(cheminDuFichier: String): Configuration {
-        val fluxDeConfiguration: InputStream = contexte.assets.open(cheminDuFichier)
-        val chaineDeConfiguration: String = fluxDeConfiguration.reader().readText()
-        return configurationDepuisJSON(chaineDeConfiguration)
+        val configStream: InputStream = context.assets.open(cheminDuFichier)
+        val configString: String = configStream.reader().readText()
+        return configurationDepuisJSON(configString)
     }
 
     override fun insererPersonne(personne: Personne) {
         this.listeBlanche!!.insererPersonne(personne)
     }
 
-    override fun leFichierExisteDansLeStockageInterne(cheminDuFichier: String): Boolean {
-        return File(contexte.applicationContext.filesDir, cheminDuFichier).exists()
-    }
-
-    fun modifierTempsDeRafraichissement(rafraichissement: Rafraichissement) {
-        this.tempsDeRafraichissment = rafraichissement.temps
-        Journaliseur.journaliserModificationDeLaConfiguration(
-            TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.tag,
-            "${TagsModificationConfig.MODIFICATION_TEMPS_RAFRAICHISSEMENT.message}: ${rafraichissement.temps}"
-        )
-    }
-
-    fun leFichierExisteDansLeStockageExterne(cheminDuFichier: String): Boolean {
-        return File(contexte.getExternalFilesDir(title), cheminDuFichier).exists()
-    }
-
     override fun sauvegarder(cheminDuFichier: CheminFichier) {
-        val cheminComplet = if (cheminDuFichier.sousDossier != null) "${cheminDuFichier.sousDossier}/${cheminDuFichier.cheminDuFichier}" else cheminDuFichier.cheminDuFichier
+        val cheminComplet = if (cheminDuFichier.subDir != null) "${cheminDuFichier.subDir}/${cheminDuFichier.cheminDuFichier}" else cheminDuFichier.cheminDuFichier
         if (utiliseStockageInterne) {
-            val fichier = File(contexte.applicationContext.filesDir, cheminComplet)
+            val fichier = File(context.applicationContext.filesDir, cheminComplet)
             fichier.writeText(configurationVersJSON())
         } else {
-            val fichier = File(contexte.getExternalFilesDir(title), cheminComplet)
+            val fichier = File(context.getExternalFilesDir(title), cheminComplet)
             Log.d("Tests", "chemin du fichier : ${fichier.toString()}")
-            if (cheminDuFichier.sousDossier != null && !File(contexte.getExternalFilesDir(title), cheminDuFichier.sousDossier).exists()) {
-                File(contexte.getExternalFilesDir(title), cheminDuFichier.sousDossier).mkdirs()
+            if (cheminDuFichier.subDir != null && !File(context.getExternalFilesDir(title), cheminDuFichier.subDir).exists()) {
+                File(context.getExternalFilesDir(title), cheminDuFichier.subDir).mkdirs()
             }
             if (!fichier.exists()) {
                 fichier.createNewFile()
             }
             fichier.writeText(configurationVersJSON())
-            miseAJourGallerie(contexte, fichier, cheminDuFichier.sousDossier)
+            updateGallery(context, fichier, cheminDuFichier.subDir)
         }
     }
 
@@ -113,20 +95,20 @@ class Configuration(private val contexte: Context) : IConfiguration {
         typesDeTextos = ListeDesTypesDeTextos()
     }
 
-    private fun chargerConfigurationDepuisStockage(cheminFichier: CheminFichier, estInterne: Boolean): Configuration {
-        val repertoireDeFichier = if (estInterne) {
-            contexte.applicationContext.filesDir
+    private fun loadConfigurationFromStorage(cheminFichier: CheminFichier, isInternal: Boolean): Configuration {
+        val fileDirectory = if (isInternal) {
+            context.applicationContext.filesDir
         } else {
-            contexte.getExternalFilesDir(title)
+            context.getExternalFilesDir(title)
         }
 
-        val cheminComplet = if (cheminFichier.sousDossier != null) "${cheminFichier.sousDossier}/${cheminFichier.cheminDuFichier}" else cheminFichier.cheminDuFichier
-        val fichier = File(repertoireDeFichier, cheminComplet)
+        val fullPath = if (cheminFichier.subDir != null) "${cheminFichier.subDir}/${cheminFichier.cheminDuFichier}" else cheminFichier.cheminDuFichier
+        val file = File(fileDirectory, fullPath)
 
-        if (fichier.exists()) {
-            val fluxDeConfiguration: InputStream = fichier.inputStream()
-            val chaineDeConfiguration: String = fluxDeConfiguration.reader().readText()
-            return configurationDepuisJSON(chaineDeConfiguration)
+        if (file.exists()) {
+            val configStream: InputStream = file.inputStream()
+            val configString: String = configStream.reader().readText()
+            return configurationDepuisJSON(configString)
         }
 
         val config = configurationDepuisAssets(cheminFichier.cheminDuFichier)
@@ -134,13 +116,9 @@ class Configuration(private val contexte: Context) : IConfiguration {
         return this
     }
 
-    override fun configurationDepuisFichierInterne(cheminDuFichier: CheminFichier): Configuration {
-        return chargerConfigurationDepuisStockage(cheminDuFichier, true)
-    }
-
     override fun configurationDepuisStockageExterne(cheminDuFichier: CheminFichier): Configuration {
         utiliseStockageInterne = false
-        return chargerConfigurationDepuisStockage(cheminDuFichier, false)
+        return loadConfigurationFromStorage(cheminDuFichier, false)
     }
 
 }
